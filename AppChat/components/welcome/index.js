@@ -9,6 +9,7 @@ import {
   Animated,
   ScrollView,
   Alert,
+  Button,
 } from 'react-native';
 
 const scrollContent = {
@@ -43,7 +44,7 @@ const scrollContent = {
     content: "The world's fastest messaging app.\nIt is free and secure",
   },
 };
-const WelcomeScreen = () => {
+const WelcomeScreen = ({ navigation }) => {
   const [imgActive, setimgActive] = useState(0);
   const [isIcon, setIcon] = useState(false);
   const animatedValue = useState(new Animated.Value(0))[0];
@@ -57,6 +58,11 @@ const WelcomeScreen = () => {
       animatedValue.setValue(0);
     });
   };
+  const goToDetailScreen = () => {
+    navigation.navigate('Login');
+    console.log('Da Chuyen Trang');
+  };
+
   const Showstorage = () =>
     Alert.alert('Thông Báo', 'Cho phép truy cập bộ nhớ', [
       {
@@ -70,11 +76,19 @@ const WelcomeScreen = () => {
     Alert.alert('Thông Báo', 'Cho phép truy cập danh bạ', [
       {
         text: 'Cancel',
-        onPress: () => {},
+        onPress: () => {
+          console.log('Cancel pressed');
+        },
         style: 'cancel',
       },
-      { text: 'OK', onPress: () => {} },
+      {
+        text: 'OK',
+        onPress: () => {
+          goToDetailScreen();
+        },
+      },
     ]);
+
   const interpolatedColor = animatedValue.interpolate({
     inputRange: [0, 1],
     outputRange: [isIcon ? 'white' : '#181819', isIcon ? '#181819' : 'white'],
