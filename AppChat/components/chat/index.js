@@ -8,11 +8,65 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   TextInput,
-  ScrollView,
+  FlatList,
+  Dimensions,
 } from 'react-native';
 const ChatScreen = () => {
+  const data = [
+    {
+      key: '1',
+      message: 'hello',
+    },
+    {
+      key: '2',
+      message1: 'Hi',
+    },
+    {
+      key: '3',
+      message: 'How Are You ?',
+    },
+    {
+      key: '4',
+      message1: 'I Fire. Thank you and you? ',
+    },
+    {
+      key: '5',
+      message: 'I am Fire. GoodBye',
+    },
+    {
+      key: '6',
+      message1: 'Bye. See You later !',
+    },
+    {
+      key: '7',
+      message: 'Bye. See You later !',
+    },
+    {
+      key: '8',
+      message1: 'Bye. See You later !',
+    },
+  ];
+  const renderItem = ({ item }) => {
+    return (
+      <View
+        style={[
+          { backgroundColor: item.key % 2 ? '#fff' : '#ccc' },
+          { alignSelf: item.key % 2 ? 'flex-start' : 'flex-end' },
+          {
+            maxWidth: Dimensions.get('window').width / 2 + 10,
+            borderRadius: 100,
+            padding: 15,
+            marginHorizontal: 5,
+            color: 'black',
+          },
+        ]}
+      >
+        <Text>{item.key % 2 ? item.message : item.message1}</Text>
+      </View>
+    );
+  };
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.body}>
         <View style={styles.header}>
           <View style={styles.headerLeft}>
@@ -32,93 +86,42 @@ const ChatScreen = () => {
             style={[styles.iconHeader]}
           />
         </View>
-
-        <KeyboardAwareScrollView style={styles.message}>
-          <Text style={styles.textBody}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-            posuere, libero nec finibus aliquet, velit leo convallis risus, id
-            ullamcorper enim elit ut ex. Vestibulum ante ipsum primis in
-            faucibus orci luctus et ultrices posuere cubilia Curae; Morbi
-            egestas pretium enim, ac suscipit odio feugiat a. Duis malesuada,
-            erat non congue rutrum, mauris sapien iaculis nulla, at lobortis
-            enim erat id nibh. Suspendisse vel cursus elit. Suspendisse potenti.
-            Sed id pellentesque lectus. Donec commodo, nisl id eleifend
-            elementum, arcu tellus varius neque, vel tempus mauris est id
-            mauris. Sed nec venenatis nisl, id posuere tortor. Ut in massa enim.
-            Phasellus facilisis, tellus ac ultrices viverra, turpis dolor
-            fermentum risus, et pharetra purus urna eget felis. Fusce
-            sollicitudin ligula nec orci pellentesque, in tempor nisl facilisis.
-            Maecenas ac finibus ipsum. Suspendisse in risus ut velit vestibulum
-            tempus eu a velit. Curabitur consequat elit at tortor commodo, at
-            consectetur enim tincidunt. Aliquam id velit et neque tempus
-            ullamcorper. Morbi non nulla suscipit, efficitur tortor at, tempus
-            mi. Proin ut ligula lectus. Sed dapibus odio et dui convallis, in
-            tristique ante euismod. Nullam sodales tellus non nibh sollicitudin,
-            vitae malesuada elit molestie. Pellentesque ut tincidunt lorem.
-            Suspendisse lobortis, arcu non tincidunt vestibulum, erat nisi
-            tincidunt justo, a efficitur dolor eros eget enim. Nulla facilisi.
-            Cras scelerisque ante vel justo consectetur, ac rutrum nibh aliquam.
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-            posuere, libero nec finibus aliquet, velit leo convallis risus, id
-            ullamcorper enim elit ut ex. Vestibulum ante ipsum primis in
-            faucibus orci luctus et ultrices posuere cubilia Curae; Morbi
-            egestas pretium enim, ac suscipit odio feugiat a. Duis malesuada,
-            erat non congue rutrum, mauris sapien iaculis nulla, at lobortis
-            enim erat id nibh. Suspendisse vel cursus elit. Suspendisse potenti.
-            Sed id pellentesque lectus. Donec commodo, nisl id eleifend
-            elementum, arcu tellus varius neque, vel tempus mauris est id
-            mauris. Sed nec venenatis nisl, id posuere tortor. Ut in massa enim.
-            Phasellus facilisis, tellus ac ultrices viverra, turpis dolor
-            fermentum risus, et pharetra purus urna eget felis. Fusce
-            sollicitudin ligula nec orci pellentesque, in tempor nisl facilisis.
-            Maecenas ac finibus ipsum. Suspendisse in risus ut velit vestibulum
-            tempus eu a velit. Curabitur consequat elit at tortor commodo, at
-            consectetur enim tincidunt. Aliquam id velit et neque tempus
-            ullamcorper. Morbi non nulla suscipit, efficitur tortor at, tempus
-            mi. Proin ut ligula lectus. Sed dapibus odio et dui convallis, in
-            tristique ante euismod. Nullam sodales tellus non nibh sollicitudin,
-            vitae malesuada elit molestie. Pellentesque ut tincidunt lorem.
-            Suspendisse lobortis, arcu non tincidunt vestibulum, erat nisi
-            tincidunt justo, a efficitur dolor eros eget enim. Nulla facilisi.
-            Cras scelerisque ante vel justo consectetur, ac rutrum nibh aliquam.
-          </Text>
-        </KeyboardAwareScrollView>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
-          keyboardVerticalOffset={20}
-          style={styles.bottomContainer}
-        >
-          <View style={styles.bottom}>
-            <View style={styles.inputContainer}>
-              <View style={styles.bottomLeft}>
-                <Ionicons name='image' size={20} style={styles.iconInput} />
-                <Ionicons
-                  name='file-tray-stacked-outline'
-                  size={20}
-                  style={styles.iconInput}
-                />
-              </View>
-
-              <View style={styles.bottomCenter}>
-                <TextInput
-                  placeholder='Bắt đầu một tin nhắn'
-                  placeholderTextColor='#b1b5b9'
-                  style={styles.keyboardText}
-                />
-              </View>
-
-              <View style={styles.bottomRight}>
-                <Ionicons
-                  name='mic-circle'
-                  size={30}
-                  style={styles.iconmicInput}
-                />
-              </View>
-            </View>
-          </View>
-        </KeyboardAvoidingView>
+        <FlatList
+          inverted
+          data={data}
+          renderItem={renderItem}
+          style={{ flex: 1, marginBottom: 30 }}
+        />
       </View>
-    </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        keyboardVerticalOffset={10}
+        style={styles.bottom}
+      >
+        <View style={styles.inputContainer}>
+          <View style={styles.bottomLeft}>
+            <Ionicons name='image' size={20} style={styles.iconInput} />
+            <Ionicons
+              name='file-tray-stacked-outline'
+              size={20}
+              style={styles.iconInput}
+            />
+          </View>
+
+          <View style={styles.bottomCenter}>
+            <TextInput
+              placeholder='Bắt đầu một tin nhắn'
+              placeholderTextColor='#b1b5b9'
+              style={styles.keyboardText}
+            />
+          </View>
+
+          <View style={styles.bottomRight}>
+            <Ionicons name='mic-circle' size={30} style={styles.iconmicInput} />
+          </View>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 

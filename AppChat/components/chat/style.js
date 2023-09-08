@@ -47,16 +47,16 @@ const styles = StyleSheet.create({
   textBody: {
     color: 'white',
   },
-  bottomContainer: {},
   bottom: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     padding: 10,
   },
   inputContainer: {
-    flex: 1,
-    flexDirection: 'row',
+    height: 50,
     borderRadius: 50,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignContent: 'center',
     backgroundColor: '#29353f',
@@ -64,7 +64,6 @@ const styles = StyleSheet.create({
   bottomLeft: {
     width: '20%',
     paddingLeft: 20,
-
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
