@@ -1,7 +1,7 @@
-import { 
+import {
   View,
   KeyboardAvoidingView,
-  TextInput, 
+  TextInput,
   Text,
   Platform,
   TouchableWithoutFeedback,
@@ -10,55 +10,68 @@ import {
   Image,
   StatusBar,
   Alert,
-} from 'react-native'
+} from 'react-native';
 
-import React, { useState} from 'react'
-import styles from './style'
+import React, { useState } from 'react';
+import styles from './style';
 const Separator = () => <View style={styles.separator} />;
 
-const LoginScreen = () => {
-  const [number,phoneInput] = React.useState(0);
+const LoginScreen = ({ navigation }) => {
+  const [number, phoneInput] = React.useState(0);
   const handleTextChange = (text) => {
     phoneInput(text.length);
   };
-
+  const goToDetailScreen = () => {
+    navigation.navigate('Home');
+    console.log('Da Chuyen Trang');
+  };
   return (
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios'?'height':'padding'}style= {styles.container}>
-        <StatusBar barStyle={'dark-content'} />
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'height' : 'padding'}
+      style={styles.container}
+    >
+      <StatusBar barStyle={'dark-content'} />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
           <View style={styles.top}>
-            <Image style={styles.phone} source={require('./../../assets/phone.png')}/>
+            <Image
+              style={styles.phone}
+              source={require('./../../assets/phone.png')}
+            />
             <Text style={styles.texttop}>Your Phone</Text>
           </View>
-          <Separator/>
+          <Separator />
           <View style={styles.conten}>
             <View style={styles.country}>
               <Text style={styles.textcountry}>+84</Text>
-              </View>
-            <TextInput keyboardType='phone-pad'  style={styles.textInput} placeholder='Phone number' 
-            onChangeText={handleTextChange}
-            multiline={true}/>
+            </View>
+            <TextInput
+              keyboardType='phone-pad'
+              style={styles.textInput}
+              placeholder='Phone number'
+              onChangeText={handleTextChange}
+              multiline={true}
+            />
           </View>
-          <Separator/>
+          <Separator />
           <View style={styles.btn}>
-          <TouchableOpacity style={styles.button} onPress={()=>{
-            if(number<1||number>9){
-              Alert.alert(
-                'Thông báo',
-                'Nhập sai định dạng',
-              );
-            }
-          }}>
-            <Text style={styles.text_btn}>Login</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                if (number < 1 || number > 9) {
+                  Alert.alert('Thông báo', 'Nhập sai định dạng');
+                }
+              }}
+            >
+              <Text style={styles.text_btn} onPress={goToDetailScreen}>
+                Login
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
-        </TouchableWithoutFeedback>
-        
-      </KeyboardAvoidingView>
-  )
-}
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
+  );
+};
 
-export default LoginScreen
-
+export default LoginScreen;
