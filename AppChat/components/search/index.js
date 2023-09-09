@@ -1,98 +1,89 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Image,
-  ScrollView,
-  SafeAreaView,
-  Dimensions,
-  StyleSheet,
-  Text,
-} from 'react-native';
+// SearchBar.js
+import React from "react";
+import { StyleSheet, TextInput, View, Keyboard, Button } from "react-native";
+import { Feather, Entypo } from "@expo/vector-icons";
 
-const images = [
-  require('./../../assets/images/logo.png'),
-  require('./../../assets/images/fast.png'),
-  require('./../../assets/images/gift.png'),
-  require('./../../assets/images/unlitmitted.png'),
-  require('./../../assets/images/security.png'),
-  require('./../../assets/images/cloud.png'),
-];
-
-const WIDTH = Dimensions.get('window').width;
-const HEIGHT = Dimensions.get('window').height;
-
-const SearchScreen = () => {
-  const [imgActive, setimgActive] = useState(0);
-
-  onchange = (nativeEvent) => {
-    if (nativeEvent) {
-      const slide = Math.ceil(
-        nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width
-      );
-      if (slide != imgActive) {
-        setimgActive(slide);
-      }
-    }
-  };
+const SearchBar = ({clicked, searchPhrase, setSearchPhrase, setCLicked}) => {
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.wrap}>
-        <ScrollView
-          onScroll={({ nativeEvent }) => onchange(nativeEvent)}
-          showsHorizontalScrollIndicator={false}
-          pagingEnabled
-          horizontal
-          style={styles.wrap}
-          scrollEventThrottle={16}
-        >
-          {images.map((e, index) => {
-            return (
-              <Image
-                key={e}
-                resizeMode='stretch'
-                style={styles.wrap}
-                source={e}
-              />
-            );
-          })}
-        </ScrollView>
-        <View style={styles.wrapDot}>
-          {images.map((e, index) => {
-            return (
-              <Text
-                key={e}
-                style={imgActive == index ? styles.dotActive : styles.dot}
-              >
-                ●
-              </Text>
-            );
-          })}
-        </View>
+    <View style={styles.container}>
+      <View
+        style={
+          clicked
+            ? styles.searchBar__clicked
+            : styles.searchBar__unclicked
+        }
+      >
+        {/* search Icon */}
+        <Feather
+          name="search"
+          size={20}
+          color="black"
+          style={{ marginLeft: 1 }}
+        />
+        {/* Input field */}
+        <TextInput
+          style={styles.input}
+          placeholder="Search"
+          value={searchPhrase}
+          onChangeText={setSearchPhrase}
+          onFocus={() => {
+            setClicked(true);
+          }}
+        />
+        {/* cross Icon, depending on whether the search bar is clicked or not */}
+        {clicked && (
+          <Entypo name="cross" size={20} color="black" style={{ padding: 1 }} onPress={() => {
+              setSearchPhrase("")
+          }}/>
+        )}
       </View>
-    </SafeAreaView>
+      {/* cancel button, depending on whether the search bar is clicked or not */}
+      {clicked && (
+        <View>
+          <Button
+            title="Cancel"
+            onPress={() => {
+              Keyboard.dismiss();
+              setClicked(false);
+            }}
+          ></Button>
+        </View>
+      )}
+    </View>
   );
 };
+export default SearchBar;
+
+// styles
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    margin: 15,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    flexDirection: "row",
+    width: "90%",
+
   },
-  wrap: {
-    height: HEIGHT * 0.25,
-    width: WIDTH,
+  searchBar__unclicked: {
+    padding: 10,
+    flexDirection: "row",
+    width: "95%",
+    backgroundColor: "#d9dbda",
+    borderRadius: 15,
+    alignItems: "center",
   },
-  wrapDot: {
-    position: 'absolute',
-    bottom: 0,
-    flexDirection: 'row',
-    alignSelf: 'center',
+  searchBar__clicked: {
+    padding: 10,
+    flexDirection: "row",
+    width: "80%",
+    backgroundColor: "#d9dbda",
+    borderRadius: 15,
+    alignItems: "center",
+    justifyContent: "space-evenly",
   },
-  dotActive: {
-    margin: 3,
-    color: 'black',
-  },
-  dot: {
-    margin: 3,
-    color: 'white',
+  input: {
+    fontSize: 20,
+    marginLeft: 10,
+    width: "90%",
   },
 });
-export default SearchScreen;
