@@ -73,6 +73,19 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   bodyBody: { flex: 1 },
+  bodyStatus: {
+    height: '30%',
+  },
+  uploadImg: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  imgStatus: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
+  },
   textInput: {
     height: '100%',
     textAlign: 'center',
