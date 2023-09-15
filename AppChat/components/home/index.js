@@ -12,10 +12,15 @@ import {
   TouchableOpacity,
   TextInput,
   FlatList,
+<<<<<<< HEAD
   StatusBar
 } from 'react-native';
 const HomeScreen = ({ navigation }) => {
 
+=======
+} from 'react-native';
+const HomeScreen = ({ navigation }) => {
+>>>>>>> origin/main
   const data = [
     {
       key: '1',
@@ -58,9 +63,13 @@ const HomeScreen = ({ navigation }) => {
     console.log('Da Chuyen Trang');
   };
   return (
+<<<<<<< HEAD
     
     <View style={styles.container}>
       <StatusBar barStyle={'auto'} />
+=======
+    <View style={styles.container}>
+>>>>>>> origin/main
       <View style={styles.headerContainer}>
         <View style={styles.headerLeft}>
           <MaterialCommunityIcons

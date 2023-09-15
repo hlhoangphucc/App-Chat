@@ -14,6 +14,7 @@ import {
 
 import React, { useState } from 'react';
 import styles from './style';
+<<<<<<< HEAD
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import  app  from '../../firebase';
 
@@ -33,6 +34,19 @@ const LoginScreen = ({ navigation }) => {
       Alert.alert('Incorrect email or password.');
     }
   }
+=======
+const Separator = () => <View style={styles.separator} />;
+
+const LoginScreen = ({ navigation }) => {
+  const [number, phoneInput] = React.useState(0);
+  const handleTextChange = (text) => {
+    phoneInput(text.length);
+  };
+  const goToDetailScreen = () => {
+    navigation.navigate('Home');
+    console.log('Da Chuyen Trang');
+  };
+>>>>>>> origin/main
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'height' : 'padding'}
@@ -44,6 +58,7 @@ const LoginScreen = ({ navigation }) => {
           <View style={styles.top}>
             <Image
               style={styles.phone}
+<<<<<<< HEAD
               source={require('./../../assets/send.png')}
             />
           </View>
@@ -95,6 +110,39 @@ const LoginScreen = ({ navigation }) => {
                 Register
               </Text>
             </TouchableOpacity>
+=======
+              source={require('./../../assets/phone.png')}
+            />
+            <Text style={styles.texttop}>Your Phone</Text>
+          </View>
+          <Separator />
+          <View style={styles.conten}>
+            <View style={styles.country}>
+              <Text style={styles.textcountry}>+84</Text>
+            </View>
+            <TextInput
+              keyboardType='phone-pad'
+              style={styles.textInput}
+              placeholder='Phone number'
+              onChangeText={handleTextChange}
+              multiline={true}
+            />
+          </View>
+          <Separator />
+          <View style={styles.btn}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                if (number < 1 || number > 9) {
+                  Alert.alert('Thông báo', 'Nhập sai định dạng');
+                }
+              }}
+            >
+              <Text style={styles.text_btn} onPress={goToDetailScreen}>
+                Login
+              </Text>
+            </TouchableOpacity>
+>>>>>>> origin/main
           </View>
         </View>
       </TouchableWithoutFeedback>
