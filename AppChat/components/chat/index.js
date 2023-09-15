@@ -1,11 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import styles from './style';
 import Ionicons from '@expo/vector-icons/Ionicons';
-<<<<<<< HEAD
 // import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-=======
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
->>>>>>> origin/main
 import {
   View,
   Text,
