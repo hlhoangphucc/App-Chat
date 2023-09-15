@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './style';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import renderItem from './post.js';
+import { ref, onValue, set, update, push } from 'firebase/database';
+import { db } from '../../firebase';
 import {
   View,
   Text,
@@ -12,115 +14,109 @@ import {
   TouchableOpacity,
   TextInput,
   FlatList,
+  KeyboardAvoidingView,
 } from 'react-native';
 const HomeScreen = ({ navigation }) => {
-  const data = [
-    {
-      key: '1',
-      avt: require('./../../assets/images/user.jpg'),
-      name: 'User 1',
-      content: 'Bầu trời hôm nay thật đẹp. Tôi muốn chia sẽ với mọi người',
-      imgcontent: require('./../../assets/images/nen.jpg'),
-    },
-    {
-      key: '2',
-      avt: require('./../../assets/images/user.jpg'),
-      name: 'User 2',
-      content: 'Bầu trời hôm nay thật đẹp. Tôi muốn chia sẽ với mọi người',
-      imgcontent: require('./../../assets/images/nen.jpg'),
-    },
-    {
-      key: '3',
-      avt: require('./../../assets/images/user.jpg'),
-      name: 'User 3',
-      content: 'Bầu trời hôm nay thật đẹp. Tôi muốn chia sẽ với mọi người',
-      imgcontent: require('./../../assets/images/nen.jpg'),
-    },
-    {
-      key: '4',
-      avt: require('./../../assets/images/user.jpg'),
-      name: 'User 4',
-      content: 'Bầu trời hôm nay thật đẹp. Tôi muốn chia sẽ với mọi người',
-      imgcontent: require('./../../assets/images/nen.jpg'),
-    },
-    {
-      key: '5',
-      avt: require('./../../assets/images/user.jpg'),
-      name: 'User 5',
-      content: 'Bầu trời hôm nay thật đẹp. Tôi muốn chia sẽ với mọi người',
-      imgcontent: require('./../../assets/images/nen.jpg'),
-    },
-  ];
-  const goToDetailScreen = () => {
-    navigation.navigate('Chat');
+  const [todoData, setTodoData] = useState([]);
+  // const [status, setStatus] = useState([]);
+  const flatListRef = useRef(null);
+
+  useEffect(() => {
+    const startCountRef = ref(db, 'NewPosts/');
+    onValue(startCountRef, (snapshot) => {
+      const data = snapshot.val();
+      const newPosts = Object.keys(data).map((key) => ({
+        id: key,
+        ...data[key],
+      }));
+      setTodoData(newPosts);
+    });
+  }, []);
+
+  const goToNewPostScreen = () => {
+    navigation.navigate('Newposts', { todoData: todoData });
     console.log('Da Chuyen Trang');
   };
+
+  const goToChatScreen = () => {
+    navigation.navigate('Chat');
+  };
+
+  const handlePress = () => {
+    scrollToTop();
+  };
   return (
-    <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <View style={styles.headerLeft}>
-          <MaterialCommunityIcons
-            name='account-circle-outline'
-            size={30}
-            color='white'
-          />
-        </View>
-        <View style={styles.headerRight}>
-          <Image
-            source={require('./../../assets/images/logo.png')}
-            style={styles.wrap}
-          />
-        </View>
-      </View>
-      <View style={styles.line}></View>
-      <ScrollView style={styles.bodyContainer}>
-        <View style={styles.headerBody}>
-          <View style={styles.headerleftBody}>
+
+      <View style={styles.container}>
+        <View style={styles.headerContainer}>
+          <View style={styles.headerLeft}>
+            <MaterialCommunityIcons
+              name='account-circle-outline'
+              size={30}
+              color='white'
+            />
+          </View>
+          <View style={styles.headerRight}>
             <Image
               source={require('./../../assets/images/logo.png')}
               style={styles.wrap}
             />
           </View>
-          <View style={styles.headercenterBody}>
-            <View style={styles.boderradiusBody}>
-              <TextInput
-                placeholder='Bạn đang nghĩ gì ?'
-                placeholderTextColor='#b1b5b9'
-                style={styles.statusheaderBody}
+        </View>
+        <View style={styles.line}></View>
+        <View style={styles.bodyContainer}>
+          <View style={styles.headerBody}>
+            <View style={styles.headerleftBody}>
+              <Image
+                source={require('./../../assets/images/logo.png')}
+                style={styles.wrapBody}
               />
             </View>
+            <View style={styles.headercenterBody}>
+              <TouchableOpacity
+                style={styles.boderradiusBody}
+                onPress={goToNewPostScreen}
+              >
+                <Text style={styles.boderText}>Bạn đang nghĩ gì ? </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.headerrightBody}>
+              <TouchableOpacity onPress={handlePress}>
+                <MaterialCommunityIcons name='send' size={30} color='white' />
+              </TouchableOpacity>
+            </View>
           </View>
-          <View style={styles.headerrightBody}>
-            <MaterialCommunityIcons name='send' size={30} color='white' />
+          <View style={styles.lineBody}></View>
+          <View style={styles.contentBody}>
+            <FlatList
+              ref={flatListRef}
+              data={todoData.reverse()}
+              renderItem={renderItem}
+            />
           </View>
         </View>
-        <View style={styles.lineBody}></View>
-        <View style={styles.contentBody}>
-          <FlatList data={data} renderItem={renderItem} />
+
+        <View style={styles.line}></View>
+
+        <View style={styles.bottomContainer}>
+          <TouchableOpacity style={styles.bowshadow}>
+            <MaterialCommunityIcons name='home' size={30} color='white' />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.bowshadow}>
+            <MaterialCommunityIcons
+              name='account-search'
+              size={30}
+              color='white'
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.bowshadow}>
+            <MaterialIcons name='notifications-none' size={30} color='white' />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.bowshadow} onPress={goToChatScreen}>
+            <MaterialCommunityIcons name='gmail' size={30} color='white' />
+          </TouchableOpacity>
         </View>
-      </ScrollView>
-
-      <View style={styles.line}></View>
-
-      <View style={styles.bottomContainer}>
-        <TouchableOpacity style={styles.bowshadow}>
-          <MaterialCommunityIcons name='home' size={30} color='white' />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.bowshadow}>
-          <MaterialCommunityIcons
-            name='account-search'
-            size={30}
-            color='white'
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.bowshadow}>
-          <MaterialIcons name='notifications-none' size={30} color='white' />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.bowshadow} onPress={goToDetailScreen}>
-          <MaterialCommunityIcons name='gmail' size={30} color='white' />
-        </TouchableOpacity>
       </View>
-    </View>
   );
 };
 

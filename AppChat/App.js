@@ -4,13 +4,15 @@ import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './components/login/index';
 import WelcomeScreen from './components/welcome/index';
 import ChatScreen from './components/chat/index';
-import HomeScreen from './components/home';
+import HomeScreen from './components/home/index';
+import NewpostScreen from './components/home/newpost/newpost';
+import firebase from './firebase';
 const Stack = createStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
+        {/* <Stack.Screen
           name='Welcome'
           component={WelcomeScreen}
           options={{ headerShown: false }}
@@ -19,10 +21,15 @@ const App = () => {
           name='Login'
           component={LoginScreen}
           options={{ headerShown: false }}
-        />
+        /> */}
         <Stack.Screen
           name='Home'
           component={HomeScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='Newposts'
+          component={NewpostScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
