@@ -6,6 +6,7 @@ import WelcomeScreen from './components/welcome/index';
 import ChatScreen from './components/chat/index';
 import HomeScreen from './components/home/index';
 import NewpostScreen from './components/home/newpost/newpost';
+import RegisterScreen from './components/register/register_screen';
 import firebase from './firebase';
 const Stack = createStackNavigator();
 const App = () => {
@@ -16,12 +17,17 @@ const App = () => {
           name='Welcome'
           component={WelcomeScreen}
           options={{ headerShown: false }}
-        />
+        /> */}
         <Stack.Screen
           name='Login'
           component={LoginScreen}
           options={{ headerShown: false }}
-        /> */}
+        />
+        <Stack.Screen
+          name='Register'
+          component={RegisterScreen}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name='Home'
           component={HomeScreen}

@@ -24,6 +24,7 @@ const NewpostScreen = () => {
   const firstItem = receivedData[0];
   const avt = firstItem.avt;
   const name = firstItem.name;
+  const receivedname = route.params.name;
   const [status, setStatus] = useState('');
   const [image, setImage] = useState(null);
   const createNewpost = async () => {
@@ -34,7 +35,7 @@ const NewpostScreen = () => {
         avt: avt,
         content: status,
         imgcontent: imageUrl,
-        name: name,
+        name: receivedname,
       };
       await addPostToDatabase(postData);
       console.log('Bài viết mới đã được thêm vào Firebase thành công');
@@ -119,7 +120,7 @@ const NewpostScreen = () => {
               <Image source={{ uri: avt }} style={styles.wrap} />
             </View>
             <View style={styles.bodyheaderRight}>
-              <Text style={styles.name}>{name}</Text>
+              <Text style={styles.name}>{receivedname}</Text>
             </View>
           </View>
           <View style={styles.bodyBody}>

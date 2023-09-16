@@ -1,7 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './style';
 import Ionicons from '@expo/vector-icons/Ionicons';
-
 import {
   View,
   Text,
@@ -10,48 +9,68 @@ import {
   TextInput,
   FlatList,
   Dimensions,
+  TouchableOpacity,
 } from 'react-native';
+import uuid from 'react-native-uuid';
+import { ref, set, onValue, push } from 'firebase/database';
+import { db } from '../../firebase';
+import { useRoute } from '@react-navigation/native';
+
 const ChatScreen = () => {
-  const data = [
-    {
-      key: '1',
-      message: 'hello',
-    },
-    {
-      key: '2',
-      message1: 'Hi',
-    },
-    {
-      key: '3',
-      message: 'How Are You ?',
-    },
-    {
-      key: '4',
-      message1: 'I Fire. Thank you and you? ',
-    },
-    {
-      key: '5',
-      message: 'I am Fire. GoodBye',
-    },
-    {
-      key: '6',
-      message1: 'Bye. See You later !',
-    },
-    {
-      key: '7',
-      message: 'Bye. See You later !',
-    },
-    {
-      key: '8',
-      message1: 'Bye. See You later !',
-    },
-  ];
+  const [msg, setMsg] = useState('');
+  const [chatData, setChatData] = useState([]);
+  const [currentChatIndex, setCurrentChatIndex] = useState(0);
+  const route = useRoute();
+  const receivedname = route.params.name;
+  const flatListRef = useRef(null);
+  const ITEM_HEIGHT = 50;
+  useEffect(() => {
+    const startCountRef = ref(db, 'chat/');
+    onValue(startCountRef, (snapshot) => {
+      const data = snapshot.val();
+      const newChat = Object.keys(data).map((key) => ({
+        id: key,
+        ...data[key],
+      }));
+      setChatData(newChat);
+    });
+  }, []);
+  const targetChatIndex = 1;
+
+  useEffect(() => {
+    setCurrentChatIndex(targetChatIndex);
+  }, [targetChatIndex]);
+
+  const targetChatName = chatData[targetChatIndex]?.name;
+
+  // console.log(targetChatName);
+
+  const sendChat = () => {
+    if (msg == '') {
+      return false;
+    }
+    let data = {
+      msg: msg,
+      name: receivedname,
+    };
+    const newChatRef = push(ref(db, 'chat/'));
+    set(newChatRef, data)
+      .then(() => {
+        console.log('Chat thành công ');
+        setMsg('');
+      })
+      .catch((error) => {
+        console.error('Đã xảy ra lỗi: ', error);
+      });
+  };
   const renderItem = ({ item }) => {
     return (
       <View
         style={[
-          { backgroundColor: item.key % 2 ? '#fff' : '#ccc' },
-          { alignSelf: item.key % 2 ? 'flex-start' : 'flex-end' },
+          { backgroundColor: item.name != receivedname ? '#fff' : '#ccc' },
+          {
+            alignSelf: item.name != receivedname ? 'flex-start' : 'flex-end',
+          },
           {
             maxWidth: Dimensions.get('window').width / 2 + 10,
             borderRadius: 100,
@@ -61,9 +80,18 @@ const ChatScreen = () => {
           },
         ]}
       >
-        <Text>{item.key % 2 ? item.message : item.message1}</Text>
+        <Text>{item.msg}</Text>
       </View>
     );
+  };
+  const handleContentSizeChange = () => {
+    if (flatListRef.current && chatData.length > 0) {
+      const lastIndex = chatData.length - 1;
+      flatListRef.current.scrollToIndex({
+        index: lastIndex,
+        animated: true,
+      });
+    }
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -78,7 +106,9 @@ const ChatScreen = () => {
             <View style={[styles.avtCirle]}>
               <Text style={[styles.avtText]}>N</Text>
             </View>
-            <Text style={[styles.Name]}>KingCute</Text>
+            <Text style={[styles.Name]}>
+              {/* {firstChatName !== receivedname ? firstChatName : receivedname} */}
+            </Text>
           </View>
           <Ionicons
             name='alert-circle-outline'
@@ -86,11 +116,20 @@ const ChatScreen = () => {
             style={[styles.iconHeader]}
           />
         </View>
+
         <FlatList
-          inverted
-          data={data}
+          inverted={false}
+          ref={flatListRef}
+          data={chatData}
           renderItem={renderItem}
+          keyExtractor={(item, index) => index.toString()}
           style={{ flex: 1, marginBottom: 30 }}
+          onContentSizeChange={handleContentSizeChange}
+          getItemLayout={(data, index) => ({
+            length: ITEM_HEIGHT, // Chiều cao của mỗi phần tử
+            offset: ITEM_HEIGHT * index, // Vị trí bắt đầu của mỗi phần tử
+            index, // Chỉ mục của phần tử
+          })}
         />
       </View>
       <KeyboardAvoidingView
@@ -113,11 +152,16 @@ const ChatScreen = () => {
               placeholder='Bắt đầu một tin nhắn'
               placeholderTextColor='#b1b5b9'
               style={styles.keyboardText}
+              onChangeText={(text) => setMsg(text)}
+              value={msg}
+              onPressIn={handleContentSizeChange}
             />
           </View>
 
           <View style={styles.bottomRight}>
-            <Ionicons name='mic-circle' size={30} style={styles.iconmicInput} />
+            <TouchableOpacity onPress={sendChat}>
+              <Ionicons name='send' size={30} style={styles.iconmicInput} />
+            </TouchableOpacity>
           </View>
         </View>
       </KeyboardAvoidingView>

@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#15202b',
   },
   header: {
-    height: '10%',
+    height: 60,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
@@ -85,6 +85,9 @@ const styles = StyleSheet.create({
   },
   iconmicInput: {
     color: '#7454f5',
+  },
+  keyboardText: {
+    color: 'white',
   },
 });
 export default styles;

@@ -4,27 +4,15 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import renderItem from './post.js';
 import { ref, onValue, set, update, push } from 'firebase/database';
-import { db, firebase } from '../../firebase';
-import {
-  View,
-  Text,
-  SafeAreaView,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  TextInput,
-  FlatList,
-  KeyboardAvoidingView,
-} from 'react-native';
-import {
-  getStorage,
-  ref as storageRef,
-  getDownloadURL,
-} from 'firebase/storage';
+import { db } from '../../firebase';
+import { View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
+import { useRoute } from '@react-navigation/native';
 const HomeScreen = ({ navigation }) => {
   const [todoData, setTodoData] = useState([]);
   const flatListRef = useRef(null);
-  const [mediaData, setmediaData] = useState([]);
+  const route = useRoute();
+  const receivedData = route.params.name;
+
   useEffect(() => {
     const startCountRef = ref(db, 'NewPosts/');
     onValue(startCountRef, (snapshot) => {
@@ -38,12 +26,11 @@ const HomeScreen = ({ navigation }) => {
   }, []);
 
   const goToNewPostScreen = () => {
-    navigation.navigate('Newposts', { todoData: todoData });
-    console.log('Da Chuyen Trang');
+    navigation.navigate('Newposts', { todoData: todoData, name: receivedData });
   };
 
   const goToChatScreen = () => {
-    navigation.navigate('Chat');
+    navigation.navigate('Chat', { name: receivedData });
   };
 
   const handlePress = () => {
