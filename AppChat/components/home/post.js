@@ -28,6 +28,7 @@ const renderItem = ({ item }) => {
           </View>
         </View>
       </View>
+
       <View style={styles.line}></View>
     </View>
   );
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
   wrap: {
     resizeMode: 'contain',
     width: '80%',
-    height: '20%',
+    height: 40,
     borderRadius: 100,
   },
   imgcontent: {

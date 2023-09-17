@@ -12,18 +12,63 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import uuid from 'react-native-uuid';
-import { ref, set, onValue, push } from 'firebase/database';
-import { db, firebase } from '../../firebase';
+import {
+  ref,
+  set,
+  onValue,
+  push,
+  query,
+  orderByChild,
+  equalTo,
+  get,
+} from 'firebase/database';
+import { db } from '../../firebase';
 import { useRoute } from '@react-navigation/native';
-
 const ChatScreen = () => {
   const [msg, setMsg] = useState('');
   const [chatData, setChatData] = useState([]);
   const [currentChatIndex, setCurrentChatIndex] = useState(0);
   const route = useRoute();
   const receivedname = route.params.username;
+  console.log(receivedname);
   const flatListRef = useRef(null);
   const ITEM_HEIGHT = 50;
+  const [othername, setOthername] = useState('');
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const usersRef = ref(db, 'chat/');
+        const queryRef = query(usersRef, orderByChild('name'));
+
+        const snapshot = await get(queryRef);
+
+        if (snapshot.exists()) {
+          const userData = snapshot.val();
+
+          // Lấy "name" hiện tại từ userData (hoặc từ một nguồn khác)
+          const currentName = receivedname;
+
+          // Tạo một mảng chứa tất cả các "name" khác "name" hiện tại (không trùng lặp)
+          const otherNames = [
+            ...new Set(Object.values(userData).map((user) => user.name)),
+          ];
+
+          // Loại bỏ các "name" trùng với "name" hiện tại
+          const filteredNames = otherNames.filter(
+            (name) => name !== currentName
+          );
+
+          setOthername(filteredNames);
+        } else {
+          console.log('Không tìm thấy dữ liệu người dùng.');
+        }
+      } catch (error) {
+        console.error('Lỗi khi lấy dữ liệu người dùng:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   useEffect(() => {
     const startCountRef = ref(db, 'chat/');
@@ -77,6 +122,7 @@ const ChatScreen = () => {
             borderRadius: 100,
             padding: 15,
             marginHorizontal: 5,
+            marginTop: 5,
             color: 'black',
           },
         ]}
@@ -107,9 +153,7 @@ const ChatScreen = () => {
             <View style={[styles.avtCirle]}>
               <Text style={[styles.avtText]}>N</Text>
             </View>
-            <Text style={[styles.Name]}>
-              {/* {firstChatName !== receivedname ? firstChatName : receivedname} */}
-            </Text>
+            <Text style={[styles.Name]}>{othername}</Text>
           </View>
           <Ionicons
             name='alert-circle-outline'

@@ -12,7 +12,7 @@ import {
   Alert,
 } from 'react-native';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './style';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import app from '../../firebase';
@@ -24,17 +24,34 @@ const LoginScreen = ({ navigation }) => {
   const [visible, setVisible] = useState(false);
   const [username, setUsername] = useState('');
   const auth = getAuth(app);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const usersRef = ref(db, 'users/');
+        const queryRef = query(usersRef, orderByChild('email'), equalTo(email));
+        const snapshot = await get(queryRef);
+
+        if (snapshot.exists()) {
+          const userData = snapshot.val();
+          const userId = Object.keys(userData)[0];
+          setUsername(userData[userId].name);
+        } else {
+          console.log('Không tìm thấy dữ liệu người dùng với email này.');
+        }
+      } catch (error) {
+        console.error('Lỗi khi lấy dữ liệu người dùng:', error);
+      }
+    };
+
+    if (email) {
+      fetchUserData();
+    }
+  }, [email]);
 
   const signIn = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      const usersRef = ref(db, 'users/');
-      const queryRef = query(usersRef, orderByChild('email'), equalTo(email));
-      get(queryRef).then((snapshot) => {
-        const userData = snapshot.val();
-        const userId = Object.keys(userData)[0];
-        setUsername(userData[userId].name);
-      });
+
       navigation.navigate('Home', { username: username });
     } catch (log) {
       console.log('Thất bại: ');
