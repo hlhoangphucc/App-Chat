@@ -11,7 +11,7 @@ const HomeScreen = ({ navigation }) => {
   const [todoData, setTodoData] = useState([]);
   const flatListRef = useRef(null);
   const route = useRoute();
-  const receivedData = route.params.name;
+  const receivedData = route.params.username;
 
   useEffect(() => {
     const startCountRef = ref(db, 'NewPosts/');
@@ -26,11 +26,14 @@ const HomeScreen = ({ navigation }) => {
   }, []);
 
   const goToNewPostScreen = () => {
-    navigation.navigate('Newposts', { todoData: todoData, name: receivedData });
+    navigation.navigate('Newposts', {
+      todoData: todoData,
+      username: receivedData,
+    });
   };
 
   const goToChatScreen = () => {
-    navigation.navigate('Chat', { name: receivedData });
+    navigation.navigate('Chat', { username: receivedData });
   };
 
   const handlePress = () => {

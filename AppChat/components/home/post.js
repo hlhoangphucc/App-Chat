@@ -11,7 +11,16 @@ const renderItem = ({ item }) => {
         <View style={styles.right}>
           <Text style={styles.name}>{item.name}</Text>
           <Text style={styles.content}>{item.content}</Text>
-          <Image source={{ uri: item.imgcontent }} style={styles.imgcontent} />
+          {item.imgcontent ? (
+            <Image
+              source={{ uri: item.imgcontent }}
+              style={styles.imgcontent}
+            />
+          ) : (
+            <View style={styles.centeredTextContainer}>
+              <Text style={styles.centeredText}></Text>
+            </View>
+          )}
           <View style={styles.bottomRight}>
             <AntDesign name='hearto' size={20} color='#38444d' />
             <AntDesign name='message1' size={20} color='#38444d' />
@@ -19,7 +28,6 @@ const renderItem = ({ item }) => {
           </View>
         </View>
       </View>
-
       <View style={styles.line}></View>
     </View>
   );

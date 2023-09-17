@@ -1,10 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './style';
 import Ionicons from '@expo/vector-icons/Ionicons';
-<<<<<<< HEAD
-// import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-=======
->>>>>>> Phuc
 import {
   View,
   Text,
@@ -25,7 +21,7 @@ const ChatScreen = () => {
   const [chatData, setChatData] = useState([]);
   const [currentChatIndex, setCurrentChatIndex] = useState(0);
   const route = useRoute();
-  const receivedname = route.params.name;
+  const receivedname = route.params.username;
   const flatListRef = useRef(null);
   const ITEM_HEIGHT = 50;
 
@@ -56,7 +52,7 @@ const ChatScreen = () => {
     let data = {
       msg: msg,
       name: receivedname,
-      createdAt: new Date(timestamp.toDate()).toUTCString(),
+      createdAt: new Date().toUTCString(),
     };
     const newChatRef = push(ref(db, 'chat/'));
     set(newChatRef, data)

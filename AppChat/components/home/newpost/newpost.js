@@ -23,22 +23,36 @@ const NewpostScreen = () => {
   const receivedData = route.params.todoData;
   const firstItem = receivedData[0];
   const avt = firstItem.avt;
-  const name = firstItem.name;
-  const receivedname = route.params.name;
+  // const name = firstItem.name;
+  const receivedname = route.params.username;
   const [status, setStatus] = useState('');
   const [image, setImage] = useState(null);
+  const imageUri = image || '';
   const createNewpost = async () => {
     try {
-      const imageRef = await uploadImageToStorage(image);
-      const imageUrl = await getImageDownloadURL(imageRef);
-      const postData = {
-        avt: avt,
-        content: status,
-        imgcontent: imageUrl,
-        name: receivedname,
-      };
-      await addPostToDatabase(postData);
-      console.log('Bài viết mới đã được thêm vào Firebase thành công');
+      if (image) {
+        const imageRef = await uploadImageToStorage(image);
+        const imageUrl = await getImageDownloadURL(imageRef);
+        const postData = {
+          avt: avt,
+          content: status,
+          imgcontent: '',
+          name: receivedname,
+        };
+        await addPostToDatabase(postData);
+        setStatus('');
+        console.log('Bài viết mới đã được thêm vào Firebase thành công');
+      } else {
+        const postData = {
+          avt: avt,
+          content: status,
+          imgcontent: '',
+          name: receivedname,
+        };
+        await addPostToDatabase(postData);
+        setStatus('');
+        console.log('Bài viết mới đã được thêm vào Firebase thành công');
+      }
     } catch (error) {
       console.error('Lỗi khi thêm bài viết mới:', error);
     }
@@ -48,7 +62,6 @@ const NewpostScreen = () => {
       alert('Vui Lòng Nhập Trạng Thái');
     } else {
       createNewpost();
-      setStatus('');
     }
   };
   const getImageDownloadURL = async (imageRef) => {
@@ -136,8 +149,13 @@ const NewpostScreen = () => {
               />
             </View>
             <View style={styles.uploadImg}>
-              {image && (
-                <Image source={{ uri: image }} style={styles.imgStatus} />
+              {/* <Image source={{ uri: imageUri }} style={styles.imgStatus} /> */}
+              {imageUri ? (
+                <Image source={{ uri: imageUri }} style={styles.imgStatus} />
+              ) : (
+                <View style={styles.centeredTextContainer}>
+                  <Text style={styles.centeredText}></Text>
+                </View>
               )}
             </View>
           </View>
