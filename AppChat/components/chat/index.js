@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import uuid from 'react-native-uuid';
 import { ref, set, onValue, push } from 'firebase/database';
-import { db } from '../../firebase';
+import { db, firebase } from '../../firebase';
 import { useRoute } from '@react-navigation/native';
 
 const ChatScreen = () => {
@@ -24,6 +24,7 @@ const ChatScreen = () => {
   const receivedname = route.params.name;
   const flatListRef = useRef(null);
   const ITEM_HEIGHT = 50;
+
   useEffect(() => {
     const startCountRef = ref(db, 'chat/');
     onValue(startCountRef, (snapshot) => {
@@ -36,7 +37,6 @@ const ChatScreen = () => {
     });
   }, []);
   const targetChatIndex = 1;
-
   useEffect(() => {
     setCurrentChatIndex(targetChatIndex);
   }, [targetChatIndex]);
@@ -52,6 +52,7 @@ const ChatScreen = () => {
     let data = {
       msg: msg,
       name: receivedname,
+      createdAt: new Date(timestamp.toDate()).toUTCString(),
     };
     const newChatRef = push(ref(db, 'chat/'));
     set(newChatRef, data)
