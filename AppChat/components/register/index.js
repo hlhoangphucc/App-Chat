@@ -22,7 +22,15 @@ import {
     const [isValidEmail, setisValidEmail] = useState('false');
     const auth = getAuth(app);
 
-    
+    const saveUserDataToFirestore = async (userId, userData) => {
+      try {
+        const usersCollection = collection(firestore(), 'users');
+        await addDoc(usersCollection.doc(userId), userData);
+      } catch (error) {
+        console.error('Error saving user data:', error);
+        throw error;
+      }
+    };
 
   const createUser = async () => {
   try {
