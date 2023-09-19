@@ -20,10 +20,7 @@ import styles from './style';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 const NewpostScreen = () => {
   const route = useRoute();
-  const receivedData = route.params.todoData;
-  const firstItem = receivedData[0];
-  const avt = firstItem.avt;
-  // const name = firstItem.name;
+  const avt = route.params.avt;
   const receivedname = route.params.username;
   const [status, setStatus] = useState('');
   const [image, setImage] = useState(null);
@@ -36,7 +33,7 @@ const NewpostScreen = () => {
         const postData = {
           avt: avt,
           content: status,
-          imgcontent: '',
+          imgcontent: imageUrl,
           name: receivedname,
         };
         await addPostToDatabase(postData);
@@ -149,7 +146,6 @@ const NewpostScreen = () => {
               />
             </View>
             <View style={styles.uploadImg}>
-              {/* <Image source={{ uri: imageUri }} style={styles.imgStatus} /> */}
               {imageUri ? (
                 <Image source={{ uri: imageUri }} style={styles.imgStatus} />
               ) : (

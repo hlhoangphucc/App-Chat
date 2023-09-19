@@ -7,7 +7,8 @@ import ChatScreen from './components/chat/index';
 import HomeScreen from './components/home/index';
 import NewpostScreen from './components/home/newpost/newpost';
 import RegisterScreen from './components/register/index';
-import firebase from './firebase';
+import ProfileScreen from './components/profile/index';
+import UpdateAvt from './components/profile/upload/uploadavt';
 const Stack = createStackNavigator();
 const App = () => {
   return (
@@ -42,6 +43,16 @@ const App = () => {
         <Stack.Screen
           name='Chat'
           component={ChatScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='Profile'
+          component={ProfileScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='updateavt'
+          component={UpdateAvt}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

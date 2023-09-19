@@ -23,6 +23,7 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [visible, setVisible] = useState(false);
   const [username, setUsername] = useState('');
+  const [avt, setavt] = useState('');
   const auth = getAuth(app);
   useEffect(() => {
     const fetchUserData = async () => {
@@ -35,6 +36,7 @@ const LoginScreen = ({ navigation }) => {
           const userData = snapshot.val();
           const userId = Object.keys(userData)[0];
           setUsername(userData[userId].name);
+          setavt(userData[userId].avt);
         } else {
           console.log('Không tìm thấy dữ liệu người dùng với email này.');
         }
@@ -52,7 +54,7 @@ const LoginScreen = ({ navigation }) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
 
-      navigation.navigate('Home', { username: username });
+      navigation.navigate('Home', { username: username, avt: avt });
     } catch (log) {
       console.log('Thất bại: ');
       Alert.alert('Incorrect email or password.');

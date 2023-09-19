@@ -11,7 +11,6 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
-import uuid from 'react-native-uuid';
 import {
   ref,
   set,

@@ -22,7 +22,7 @@ const RegisterScreen = ({ navigation }) => {
   const [Confirmpassword, setConfirmpassword] = useState('');
   const [isValidEmail, setisValidEmail] = useState('false');
   const auth = getAuth(app);
-  
+
   const createUser = async () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -35,6 +35,7 @@ const RegisterScreen = ({ navigation }) => {
         id: uuid.v4(),
         email: email,
         password: password,
+        avt: 'https://w.forfun.com/fetch/1b/1baf97cf727c1159392295d2a83f6781.jpeg',
       };
 
       const dbRef = ref(db, 'users/' + data.id);
