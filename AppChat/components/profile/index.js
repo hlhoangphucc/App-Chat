@@ -1,20 +1,54 @@
 import { Text, View, Image, FlatList, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import styles from './style';
-import renderItem from './posts';
+import renderItem from './post/posts';
 import { useRoute } from '@react-navigation/native';
-import { ref, query, orderByChild, equalTo, get } from 'firebase/database';
+import {
+  ref,
+  query,
+  orderByChild,
+  equalTo,
+  get,
+  onValue,
+} from 'firebase/database';
 import { db } from '../../firebase';
+import Ionicons from '@expo/vector-icons/Ionicons';
+
 const ProfileScreen = ({ navigation }) => {
-  const route = useRoute();
-  const todoData = route.params.todoData;
+
+  const [todoData, setTodoData] = useState([]);
   const [avt, setAvt] = useState('');
+  const [bg, setBg] = useState('');
   const [name, setName] = useState('');
 
-  const imageUri = avt || null;
+  const imageUriAvt = avt || null;
+  const imageUriBg = bg || null;
+  const handleIconClick = () => {
+    navigation.goBack();
+  };
   let email = 'b@gmail.com';
+  useEffect(() => {
+    const startCountRef = ref(db, 'NewPosts/');
+    onValue(startCountRef, (snapshot) => {
+      const data = snapshot.val();
+      const newPosts = Object.keys(data)
+        .map((key) => ({
+          id: key,
+          ...data[key],
+        }))
+        .filter((post) => post.email === email);
+      setTodoData(newPosts);
+    });
+  }, []);
+
   const goToUpdateAvt = () => {
     navigation.navigate('updateavt');
+  };
+  const goToUpdateBg = () => {
+    navigation.navigate('updatebg');
+  };
+  const goToSettingProfile = () => {
+    navigation.navigate('SettingProfileScreen', { username: name });
   };
   useEffect(() => {
     const fetchUserData = async () => {
@@ -28,6 +62,7 @@ const ProfileScreen = ({ navigation }) => {
           const userId = Object.keys(userData)[0];
           setAvt(userData[userId].avt);
           setName(userData[userId].name);
+          setBg(userData[userId].bg);
         } else {
           console.log('Không tìm thấy dữ liệu người dùng với email này.');
         }
@@ -49,19 +84,35 @@ const ProfileScreen = ({ navigation }) => {
         ListHeaderComponent={
           <View style={styles.headerContainer}>
             <View style={styles.backgroundUser}>
-              <Image
-                source={{
-                  uri: 'https://t3.ftcdn.net/jpg/05/58/09/76/360_F_558097675_pAMyqqZrlYTxz24ojSgPu4xkJXQJTHXq.jpg',
-                }}
-                style={styles.wrapBG}
-              />
+              <TouchableOpacity onPress={goToUpdateBg}>
+                <Image
+                  source={{
+                    uri: imageUriBg,
+                  }}
+                  style={styles.wrapBG}
+                />
+              </TouchableOpacity>
+              <View style={styles.iconsContainer}>
+                <TouchableOpacity onPress={goToSettingProfile}>
+                  <Ionicons
+                    name='ellipsis-horizontal'
+                    size={25}
+                    color='white'
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.iconsBackContainer}>
+                <TouchableOpacity onPress={handleIconClick}>
+                  <Ionicons name='arrow-back' size={25} color='white' />
+                </TouchableOpacity>
+              </View>
             </View>
             <View style={styles.avtUser}>
               <View style={styles.avt}>
                 <TouchableOpacity onPress={goToUpdateAvt}>
                   <Image
                     source={{
-                      uri: imageUri,
+                      uri: imageUriAvt,
                     }}
                     style={styles.wrapAvt}
                   />

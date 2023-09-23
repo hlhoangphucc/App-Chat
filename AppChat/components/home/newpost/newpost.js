@@ -18,6 +18,7 @@ import { firebase } from '../../../firebase';
 import { useRoute } from '@react-navigation/native';
 import styles from './style';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
 const NewpostScreen = () => {
   const route = useRoute();
   const avt = route.params.avt;
@@ -25,6 +26,7 @@ const NewpostScreen = () => {
   const [status, setStatus] = useState('');
   const [image, setImage] = useState(null);
   const imageUri = image || '';
+  const navigation = useNavigation();
   const createNewpost = async () => {
     try {
       if (image) {
@@ -35,6 +37,7 @@ const NewpostScreen = () => {
           content: status,
           imgcontent: imageUrl,
           name: receivedname,
+          email: 'b@gmail.com',
         };
         await addPostToDatabase(postData);
         setStatus('');
@@ -102,7 +105,9 @@ const NewpostScreen = () => {
       console.error('Lỗi khi chọn hình ảnh:', error);
     }
   };
-
+  const handleIconClick = () => {
+    navigation.goBack();
+  };
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -111,7 +116,10 @@ const NewpostScreen = () => {
       <SafeAreaView style={styles.container}>
         <View style={styles.headerContainer}>
           <View style={styles.headerLeft}>
-            <Ionicons name='arrow-back' size={30} color='white' />
+            <TouchableOpacity onPress={handleIconClick}>
+              <Ionicons name='arrow-back' size={30} color='white' />
+            </TouchableOpacity>
+
             <Text style={styles.textHeader}>Tạo bài viết</Text>
           </View>
           <View style={styles.headerRight}>

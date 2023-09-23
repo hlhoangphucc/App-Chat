@@ -10,7 +10,6 @@ const styles = StyleSheet.create({
   },
   backgroundUser: {
     height: '65%',
-    backgroundColor: 'yellow',
   },
   avtUser: {
     height: '25%',
@@ -53,6 +52,18 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     height: '60%',
+  },
+  iconsContainer: {
+    position: 'absolute',
+    top: 5,
+    right: 10,
+    justifyContent: 'flex-end',
+  },
+  iconsBackContainer: {
+    position: 'absolute',
+    top: 5,
+    left: 10,
+    justifyContent: 'flex-end',
   },
 });
 export default styles;

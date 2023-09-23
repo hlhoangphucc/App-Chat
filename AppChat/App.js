@@ -9,6 +9,10 @@ import NewpostScreen from './components/home/newpost/newpost';
 import RegisterScreen from './components/register/index';
 import ProfileScreen from './components/profile/index';
 import UpdateAvt from './components/profile/upload/uploadavt';
+import UpdateBg from './components/profile/upload/uploadbg';
+import SettingProfile from './components/profile/setting/setting';
+import InfoScreen from './components/profile/setting/info/info';
+import EditiIfoScreen from './components/profile/setting/editinfo/editinfo';
 const Stack = createStackNavigator();
 const App = () => {
   return (
@@ -53,6 +57,26 @@ const App = () => {
         <Stack.Screen
           name='updateavt'
           component={UpdateAvt}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='updatebg'
+          component={UpdateBg}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='SettingProfileScreen'
+          component={SettingProfile}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='Info'
+          component={InfoScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='EditInfo'
+          component={EditiIfoScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

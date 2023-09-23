@@ -24,7 +24,7 @@ import styles from './style';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
-const UpdateAvt = () => {
+const UpdateBg = () => {
   const [image, setImage] = useState(null);
   const imageUri = image || '';
   const [id, setId] = useState('');
@@ -60,7 +60,7 @@ const UpdateAvt = () => {
         const imageUrl = await getImageDownloadURL(imageRef);
 
         await update(ref(db, 'users/' + id), {
-          avt: imageUrl,
+          bg: imageUrl,
         });
 
         console.log('Đổi avt thành công');
@@ -156,4 +156,4 @@ const UpdateAvt = () => {
   );
 };
 
-export default UpdateAvt;
+export default UpdateBg;

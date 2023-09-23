@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styles from './style';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import renderItem from './post.js';
+import renderItem from './post/posts';
 import {
   ref,
   onValue,
@@ -32,6 +32,7 @@ const HomeScreen = ({ navigation }) => {
       setTodoData(newPosts);
     });
   }, []);
+
   let email = 'b@gmail.com';
   useEffect(() => {
     const fetchUserData = async () => {
