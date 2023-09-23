@@ -6,6 +6,7 @@ import WelcomeScreen from './components/welcome/index';
 import ChatScreen from './components/chat/index';
 import HomeScreen from './components/home';
 import RegisterScreen from './components/register';
+import  SearchScreen  from './components/search';
 const Stack = createStackNavigator();
 const App = () => {
   return (
@@ -16,6 +17,11 @@ const App = () => {
           component={WelcomeScreen}
           options={{ headerShown: false }}
         /> */}
+        <Stack.Screen
+          name='Search'
+          component={SearchScreen}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name='Login'
           component={LoginScreen}
@@ -36,6 +42,7 @@ const App = () => {
           component={ChatScreen}
           options={{ headerShown: false }}
         />
+
       </Stack.Navigator>
     </NavigationContainer>
 

@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
 import styles from './style';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import renderItem from './post.js';
+import { getAuth,onAuthStateChanged } from 'firebase/auth';
+import { ref,orderByChild, equalTo, get, query} from 'firebase/database';
+import { db } from '../../firebase';
 import {
   View,
-  Text,
-  SafeAreaView,
   ScrollView,
   Image,
   TouchableOpacity,
@@ -15,6 +15,30 @@ import {
   StatusBar
 } from 'react-native';
 const HomeScreen = ({ navigation }) => {
+  let userID = null;
+  
+  
+    const auth = getAuth();
+  
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        userID = user.uid;
+        const dbRef = ref(db, 'users/');
+        const queryRef = query(dbRef,orderByChild('id'),equalTo(userID));
+        get(queryRef).then((snapshot)=>{
+          if(snapshot.exists()){
+            const userData = snapshot.val();
+            const user = Object.keys(userData)[0];
+            console.log(userData[user].name);
+          }else{
+            console.log('khong co du lieu')
+          }
+        })
+      } else {
+        console.log('dang xuat r');
+      }
+    }); 
 
   const data = [
     {
@@ -110,7 +134,11 @@ const HomeScreen = ({ navigation }) => {
         <TouchableOpacity style={styles.bowshadow}>
           <MaterialCommunityIcons name='home' size={30} color='white' />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.bowshadow}>
+        <TouchableOpacity style={styles.bowshadow}
+        onPress={()=>{
+          navigation.navigate('Search');
+        }}
+        >
           <MaterialCommunityIcons
             name='account-search'
             size={30}
