@@ -6,7 +6,9 @@ import { useRoute } from '@react-navigation/native';
 
 const SettingProfile = ({ navigation }) => {
   const route = useRoute();
-  const receivedData = route.params.username;
+  const name = route.params.username;
+  const email = route.params.email;
+
   const goToUpdateAvt = () => {
     navigation.navigate('updateavt');
   };
@@ -14,7 +16,7 @@ const SettingProfile = ({ navigation }) => {
     navigation.navigate('updatebg');
   };
   const goToinfo = () => {
-    navigation.navigate('Info');
+    navigation.navigate('Info', { email: email });
   };
   const [pressedButton, setPressedButton] = useState(null);
 
@@ -35,7 +37,7 @@ const SettingProfile = ({ navigation }) => {
         <TouchableOpacity onPress={handleIconClick}>
           <MaterialIcons name='arrow-back' size={22} color='white' />
         </TouchableOpacity>
-        <Text style={styles.textHeader}>{receivedData}</Text>
+        <Text style={styles.textHeader}>{name}</Text>
       </View>
       <View style={styles.bodyContainer}>
         <View style={styles.lineBody}></View>

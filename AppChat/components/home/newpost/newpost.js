@@ -22,11 +22,13 @@ import { useNavigation } from '@react-navigation/native';
 const NewpostScreen = () => {
   const route = useRoute();
   const avt = route.params.avt;
-  const receivedname = route.params.username;
+  const name = route.params.name;
+  const email = route.params.email;
   const [status, setStatus] = useState('');
   const [image, setImage] = useState(null);
   const imageUri = image || '';
   const navigation = useNavigation();
+
   const createNewpost = async () => {
     try {
       if (image) {
@@ -36,8 +38,8 @@ const NewpostScreen = () => {
           avt: avt,
           content: status,
           imgcontent: imageUrl,
-          name: receivedname,
-          email: 'b@gmail.com',
+          name: name,
+          email: email,
         };
         await addPostToDatabase(postData);
         setStatus('');
@@ -47,7 +49,8 @@ const NewpostScreen = () => {
           avt: avt,
           content: status,
           imgcontent: '',
-          name: receivedname,
+          name: name,
+          email: email,
         };
         await addPostToDatabase(postData);
         setStatus('');
@@ -82,10 +85,12 @@ const NewpostScreen = () => {
       alert('Đăng bài thất bại');
     }
   };
+
   const addPostToDatabase = async (postData) => {
     const newDataRef = push(ref(db, 'NewPosts/'));
     await set(newDataRef, postData);
   };
+
   const pickImage = async () => {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
@@ -138,7 +143,7 @@ const NewpostScreen = () => {
               <Image source={{ uri: avt }} style={styles.wrap} />
             </View>
             <View style={styles.bodyheaderRight}>
-              <Text style={styles.name}>{receivedname}</Text>
+              <Text style={styles.name}>{name}</Text>
             </View>
           </View>
           <View style={styles.bodyBody}>

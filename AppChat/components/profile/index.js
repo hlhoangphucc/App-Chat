@@ -13,20 +13,18 @@ import {
 } from 'firebase/database';
 import { db } from '../../firebase';
 import Ionicons from '@expo/vector-icons/Ionicons';
-
 const ProfileScreen = ({ navigation }) => {
-
   const [todoData, setTodoData] = useState([]);
   const [avt, setAvt] = useState('');
   const [bg, setBg] = useState('');
   const [name, setName] = useState('');
-
+  const route = useRoute();
+  const email = route.params.email;
   const imageUriAvt = avt || null;
   const imageUriBg = bg || null;
   const handleIconClick = () => {
     navigation.goBack();
   };
-  let email = 'b@gmail.com';
   useEffect(() => {
     const startCountRef = ref(db, 'NewPosts/');
     onValue(startCountRef, (snapshot) => {
@@ -48,8 +46,12 @@ const ProfileScreen = ({ navigation }) => {
     navigation.navigate('updatebg');
   };
   const goToSettingProfile = () => {
-    navigation.navigate('SettingProfileScreen', { username: name });
+    navigation.navigate('SettingProfileScreen', {
+      username: name,
+      email: email,
+    });
   };
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {

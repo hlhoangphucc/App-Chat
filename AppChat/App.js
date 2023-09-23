@@ -25,16 +25,6 @@ const App = () => {
           options={{ headerShown: false }}
         />  */}
         <Stack.Screen
-          name='Search'
-          component={SearchScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name='Register'
-          component={RegisterScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
           name='Login'
           component={LoginScreen}
           options={{ headerShown: false }}
@@ -44,11 +34,11 @@ const App = () => {
           component={RegisterScreen}
           options={{ headerShown: false }}
         />
-
         <Stack.Screen
           name='Home'
           component={HomeScreen}
           options={{ headerShown: false }}
+          key='home'
         />
         <Stack.Screen
           name='Newposts'
@@ -63,11 +53,6 @@ const App = () => {
         <Stack.Screen
           name='Profile'
           component={ProfileScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name='Search'
-          component={SearchScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
@@ -93,6 +78,11 @@ const App = () => {
         <Stack.Screen
           name='EditInfo'
           component={EditiIfoScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='Search'
+          component={SearchScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

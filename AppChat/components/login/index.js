@@ -12,57 +12,26 @@ import {
   Alert,
 } from 'react-native';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './style';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import app from '../../firebase';
-import { db } from '../../firebase';
-import { ref, query, orderByChild, equalTo, get } from 'firebase/database';
+
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [visible, setVisible] = useState(false);
-  const [username, setUsername] = useState('');
-  const [avt, setavt] = useState('');
   const auth = getAuth(app);
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const usersRef = ref(db, 'users/');
-        const queryRef = query(usersRef, orderByChild('email'), equalTo(email));
-        const snapshot = await get(queryRef);
-
-        if (snapshot.exists()) {
-          const userData = snapshot.val();
-          const userId = Object.keys(userData)[0];
-          setUsername(userData[userId].name);
-          setavt(userData[userId].avt);
-        } else {
-          console.log('Không tìm thấy dữ liệu người dùng với email này.');
-        }
-      } catch (error) {
-        console.error('Lỗi khi lấy dữ liệu người dùng:', error);
-      }
-    };
-
-    if (email) {
-      fetchUserData();
-    }
-  }, [email]);
 
   const signIn = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-
-      navigation.navigate('Home', { username: username, avt: avt });
+      console.log('Đăng nhập thành công');
+      navigation.navigate('Home');
     } catch (log) {
       console.log('Thất bại: ');
       Alert.alert('Incorrect email or password.');
     }
-  };
-
-  const handleSigin = () => {
-    signIn();
   };
   return (
     <KeyboardAvoidingView
@@ -119,7 +88,12 @@ const LoginScreen = ({ navigation }) => {
             </View>
 
             {/*button của login */}
-            <TouchableOpacity style={styles.button_login} onPress={handleSigin}>
+            <TouchableOpacity
+              style={styles.button_login}
+              onPress={() => {
+                signIn();
+              }}
+            >
               <Text style={styles.text_login}>Login</Text>
             </TouchableOpacity>
             {/*button của login */}

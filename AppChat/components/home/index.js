@@ -14,14 +14,44 @@ import {
 } from 'firebase/database';
 import { db } from '../../firebase';
 import { View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
-import { useRoute } from '@react-navigation/native';
 const HomeScreen = ({ navigation }) => {
   const [todoData, setTodoData] = useState([]);
   const flatListRef = useRef(null);
-  const route = useRoute();
-  const receivedData = route.params.username;
+  const [name, setName] = useState('');
   const [avt, setAvt] = useState('');
+  const [email, setEmail] = useState('');
+  const [avtUSer, setavtUSer] = useState('');
   const imageUri = avt || null;
+  const imageUser = avtUSer || null;
+  const auth = getAuth();
+  let userID = null;
+  //Tự reload lại trang khi được focus
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          userID = user.uid;
+          const dbRef = ref(db, 'users/');
+          const queryRef = query(dbRef, orderByChild('id'), equalTo(userID));
+          get(queryRef).then((snapshot) => {
+            if (snapshot.exists()) {
+              const userData = snapshot.val();
+              const user = Object.keys(userData)[0];
+              setName(userData[user].name);
+              setEmail(userData[user].email);
+              setavtUSer(userData[user].avt);
+            } else {
+              console.log('khong co du lieu');
+            }
+          });
+        } else {
+          console.log('dang xuat r');
+        }
+      });
+    });
+
+    return unsubscribe;
+  }, [navigation]);
   useEffect(() => {
     const startCountRef = ref(db, 'NewPosts/');
     onValue(startCountRef, (snapshot) => {
@@ -34,7 +64,6 @@ const HomeScreen = ({ navigation }) => {
     });
   }, []);
 
-  let email = 'b@gmail.com';
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -56,21 +85,21 @@ const HomeScreen = ({ navigation }) => {
       fetchUserData();
     }
   }, [email]);
+
   const goToNewPostScreen = () => {
     navigation.navigate('Newposts', {
-      username: receivedData,
+      name: name,
+      email: email,
       avt: avt,
     });
   };
 
   const goToChatScreen = () => {
-    navigation.navigate('Chat', { username: receivedData });
+    navigation.navigate('Chat', { username: name });
   };
   const goToProfileScreen = () => {
     navigation.navigate('Profile', {
-      todoData: todoData,
-      username: receivedData,
-      avt: avt,
+      email: email,
     });
   };
 
@@ -94,7 +123,7 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.bodyContainer}>
         <View style={styles.headerBody}>
           <View style={styles.headerleftBody}>
-            <Image source={{ uri: imageUri }} style={styles.wrapBody} />
+            <Image source={{ uri: imageUser }} style={styles.wrapBody} />
           </View>
           <View style={styles.headercenterBody}>
             <TouchableOpacity

@@ -4,17 +4,21 @@ import { ref, query, orderByChild, equalTo, get } from 'firebase/database';
 import { db } from '../../../../firebase';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import styles from './style';
+import { useRoute } from '@react-navigation/native';
+
 const InfoScreen = ({ navigation }) => {
   const [avt, setAvt] = useState('');
   const [bg, setBg] = useState('');
   const [name, setName] = useState('');
   const [gender, setGender] = useState('');
   const [phone, setPhone] = useState('');
+  const route = useRoute();
+  const email = route.params.email;
   const imageUriAvt = avt || null;
   const imageUriBg = bg || null;
-  let email = 'b@gmail.com';
+
   const goToEditInfo = () => {
-    navigation.navigate('EditInfo');
+    navigation.navigate('EditInfo', { email: email });
   };
   useEffect(() => {
     const fetchUserData = async () => {

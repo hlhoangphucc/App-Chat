@@ -23,13 +23,33 @@ import { firebase } from '../../../firebase';
 import styles from './style';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
-
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 const UpdateAvt = () => {
   const [image, setImage] = useState(null);
   const imageUri = image || '';
   const [id, setId] = useState('');
   const navigation = useNavigation();
-  let email = 'b@gmail.com';
+  let [email, setEmail] = useState('');
+  const auth = getAuth();
+  let userID = null;
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      userID = user.uid;
+      const dbRef = ref(db, 'users/');
+      const queryRef = query(dbRef, orderByChild('id'), equalTo(userID));
+      get(queryRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const userData = snapshot.val();
+          const user = Object.keys(userData)[0];
+          setEmail(userData[user].email);
+        } else {
+          console.log('khong co du lieu');
+        }
+      });
+    } else {
+      console.log('dang xuat r');
+    }
+  });
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -58,12 +78,11 @@ const UpdateAvt = () => {
       if (image) {
         const imageRef = await uploadImageToStorage(image);
         const imageUrl = await getImageDownloadURL(imageRef);
-
         await update(ref(db, 'users/' + id), {
           avt: imageUrl,
         });
-
         console.log('Đổi avt thành công');
+        goToHomeScreen();
       } else {
         alert('Vui lòng chọn ảnh ');
       }
@@ -111,6 +130,9 @@ const UpdateAvt = () => {
   };
   const handleIconClick = () => {
     navigation.goBack();
+  };
+  const goToHomeScreen = () => {
+    navigation.navigate('Home');
   };
   return (
     <SafeAreaView style={styles.container}>

@@ -12,6 +12,8 @@ import {
 import { db } from '../../../../firebase';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import styles from './style';
+import { useRoute } from '@react-navigation/native';
+
 const EditiIfoScreen = ({ navigation }) => {
   const [avt, setAvt] = useState('');
   const [name, setName] = useState('');
@@ -19,8 +21,9 @@ const EditiIfoScreen = ({ navigation }) => {
   const [todoData, setTodoData] = useState('');
   const [selectedOption, setSelectedOption] = useState(null);
   const [id, setId] = useState('');
+  const route = useRoute();
+  const email = route.params.email;
   const imageUriAvt = avt || null;
-  let email = 'b@gmail.com';
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -116,7 +119,7 @@ const EditiIfoScreen = ({ navigation }) => {
   };
   const goToHomeScreen = () => {
     updateDataInFirebase();
-    navigation.navigate('Home', { username: name });
+    navigation.navigate('Home');
   };
 
   return (
