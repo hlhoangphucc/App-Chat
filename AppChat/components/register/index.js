@@ -91,7 +91,7 @@ import {
                 onChangeText={(text)=>{setPhonenumber(text)}}
                 />
               <TextInput placeholder='Email' 
-                style={styles.textInput} autoFocus keyboardType='email-address'
+                style={styles.textInput} keyboardType='email-address'
                 value={email}
                 onChangeText={(text)=>{setEmail(text);validateEmail(text)}}
                 />
