@@ -9,7 +9,7 @@ import {
   Animated,
   ScrollView,
   Alert,
-  Button,
+  StatusBar
 } from 'react-native';
 
 const scrollContent = {
@@ -105,9 +105,11 @@ const WelcomeScreen = ({ navigation }) => {
     }
   };
   return (
+    
     <Animated.View
       style={[styles.container, { backgroundColor: interpolatedColor }]}
     >
+      <StatusBar barStyle={'auto'} />
       <View style={styles.header}>
         <TouchableOpacity onPress={toggleIcon}>
           {isIcon ? (

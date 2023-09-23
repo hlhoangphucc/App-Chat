@@ -13,6 +13,7 @@ import UpdateBg from './components/profile/upload/uploadbg';
 import SettingProfile from './components/profile/setting/setting';
 import InfoScreen from './components/profile/setting/info/info';
 import EditiIfoScreen from './components/profile/setting/editinfo/editinfo';
+import SearchScreen from './components/search';
 const Stack = createStackNavigator();
 const App = () => {
   return (
@@ -22,7 +23,17 @@ const App = () => {
           name='Welcome'
           component={WelcomeScreen}
           options={{ headerShown: false }}
-        /> */}
+        />  */}
+        <Stack.Screen
+          name='Search'
+          component={SearchScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='Register'
+          component={RegisterScreen}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name='Login'
           component={LoginScreen}
@@ -52,6 +63,11 @@ const App = () => {
         <Stack.Screen
           name='Profile'
           component={ProfileScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='Search'
+          component={SearchScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen

@@ -3,6 +3,7 @@ import styles from './style';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import renderItem from './post/posts';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import {
   ref,
   onValue,
@@ -120,7 +121,12 @@ const HomeScreen = ({ navigation }) => {
         <TouchableOpacity style={styles.bowshadow}>
           <MaterialCommunityIcons name='home' size={30} color='white' />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.bowshadow}>
+        <TouchableOpacity
+          style={styles.bowshadow}
+          onPress={() => {
+            navigation.navigate('Search');
+          }}
+        >
           <MaterialCommunityIcons
             name='account-search'
             size={30}
