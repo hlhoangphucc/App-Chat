@@ -1,0 +1,257 @@
+import React, { useState, useEffect, useRef } from 'react';
+import styles from './style';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import uuid from 'react-native-uuid';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  KeyboardAvoidingView,
+  TextInput,
+  FlatList,
+  Dimensions,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
+import {
+  ref,
+  set,
+  onValue,
+  push,
+  query,
+  orderByChild,
+  equalTo,
+  get,
+} from 'firebase/database';
+import { db } from '../../../firebase';
+import { useRoute } from '@react-navigation/native';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+
+const ChatScreen = ({ navigation }) => {
+  const auth = getAuth();
+  const route = useRoute();
+  const [msg, setMsg] = useState('');
+  const [chatData, setChatData] = useState([]);
+  const [name, setName] = useState('');
+  const [avt, setAvt] = useState('');
+  const [email, setEmail] = useState('');
+  const [nameother, setNameOther] = useState('');
+  const [avtother, setAvtOther] = useState('');
+  const flatListRef = useRef(null);
+  const [id, setId] = useState('');
+  const [idother, setIdOther] = useState('');
+  const [othername, setOthername] = useState('');
+  const emailOther = route.params.email;
+  const idroom = route.params.roomId;
+  console.log(idroom);
+  const ITEM_HEIGHT = 50;
+  const imageUserOther = avtother || null;
+  let userID = null;
+  // Lấy thông tin của chính mình
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          userID = user.uid;
+          const dbRef = ref(db, 'users/');
+          const queryRef = query(dbRef, orderByChild('id'), equalTo(userID));
+          get(queryRef).then((snapshot) => {
+            if (snapshot.exists()) {
+              const userData = snapshot.val();
+              const user = Object.keys(userData)[0];
+              setName(userData[user].name);
+              setEmail(userData[user].email);
+              setAvt(userData[user].avt);
+              setId(userData[user].id);
+            } else {
+              console.log('khong co du lieu');
+            }
+          });
+        } else {
+          console.log('dang xuat r');
+        }
+      });
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
+  // Lấy thông tin của user khác
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const usersRef = ref(db, 'users/');
+        const queryRef = query(
+          usersRef,
+          orderByChild('email'),
+          equalTo(emailOther)
+        );
+        const snapshot = await get(queryRef);
+
+        if (snapshot.exists()) {
+          const userData = snapshot.val();
+          const userId = Object.keys(userData)[0];
+          setAvtOther(userData[userId].avt);
+          setNameOther(userData[userId].name);
+          setIdOther(userData[userId].id);
+        } else {
+          console.log('Không tìm thấy dữ liệu người dùng với email này.');
+        }
+      } catch (error) {
+        console.error('Lỗi khi lấy dữ liệu người dùng:', error);
+      }
+    };
+
+    if (emailOther) {
+      fetchUserData();
+    }
+  }, [emailOther]);
+  const key = id + idother;
+
+  useEffect(() => {
+    const chatPath = 'chat/' + key;
+    const chatRef = ref(db, chatPath);
+
+    onValue(chatRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        const newChat = Object.keys(data).map((key) => ({
+          id: key,
+          ...data[key],
+        }));
+        setChatData(newChat);
+      } else {
+        setChatData([]);
+      }
+    });
+  }, []);
+
+  // console.log(chatData);
+
+  const sendChat = () => {
+    if (msg == '') {
+      return false;
+    }
+    let roomid = uuid.v4();
+    let data = {
+      roomid,
+      msg: msg,
+      name: name,
+    };
+    const newChatRef = push(ref(db, 'chat/' + id + idother + '/'));
+    set(newChatRef, data)
+      .then(() => {
+        console.log('Chat thành công ');
+        setMsg('');
+      })
+      .catch((error) => {
+        console.error('Đã xảy ra lỗi: ', error);
+      });
+  };
+
+  // xử lý giao diện
+  const renderItem = ({ item }) => {
+    return (
+      <View
+        style={[
+          { backgroundColor: item.name != name ? '#fff' : '#ccc' },
+          {
+            alignSelf: item.name != name ? 'flex-start' : 'flex-end',
+          },
+          {
+            maxWidth: Dimensions.get('window').width / 2 + 10,
+            borderRadius: 100,
+            padding: 15,
+            marginHorizontal: 5,
+            marginTop: 5,
+            color: 'black',
+          },
+        ]}
+      >
+        <Text>{item.msg}</Text>
+      </View>
+    );
+  };
+  const handleContentSizeChange = () => {
+    if (flatListRef.current && chatData.length > 0) {
+      const lastIndex = chatData.length - 1;
+      flatListRef.current.scrollToIndex({
+        index: lastIndex,
+        animated: true,
+      });
+    }
+  };
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.body}>
+        <View style={styles.header}>
+          <View style={styles.headerLeft}>
+            <Ionicons
+              name='arrow-back-outline'
+              size={30}
+              style={[styles.iconHeader]}
+            />
+            <View style={[styles.avtCirle]}>
+              <Image source={{ uri: imageUserOther }} style={styles.wrapBody} />
+            </View>
+            <Text style={[styles.Name]}>{nameother}</Text>
+          </View>
+          <Ionicons
+            name='alert-circle-outline'
+            size={30}
+            style={[styles.iconHeader]}
+          />
+        </View>
+
+        <FlatList
+          ref={flatListRef}
+          data={chatData}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => index.toString()}
+          style={{ flex: 1, marginBottom: 30 }}
+          onContentSizeChange={handleContentSizeChange}
+          getItemLayout={(data, index) => ({
+            length: ITEM_HEIGHT, // Chiều cao của mỗi phần tử
+            offset: ITEM_HEIGHT * index, // Vị trí bắt đầu của mỗi phần tử
+            index, // Chỉ mục của phần tử
+          })}
+        />
+      </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        keyboardVerticalOffset={10}
+        style={styles.bottom}
+      >
+        <View style={styles.inputContainer}>
+          <View style={styles.bottomLeft}>
+            <Ionicons name='image' size={20} style={styles.iconInput} />
+            <Ionicons
+              name='file-tray-stacked-outline'
+              size={20}
+              style={styles.iconInput}
+            />
+          </View>
+
+          <View style={styles.bottomCenter}>
+            <TextInput
+              placeholder='Bắt đầu một tin nhắn'
+              placeholderTextColor='#b1b5b9'
+              style={styles.keyboardText}
+              onChangeText={(text) => setMsg(text)}
+              value={msg}
+              onPressIn={handleContentSizeChange}
+            />
+          </View>
+
+          <View style={styles.bottomRight}>
+            <TouchableOpacity onPress={sendChat}>
+              <Ionicons name='send' size={30} style={styles.iconmicInput} />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+  );
+};
+
+export default ChatScreen;
