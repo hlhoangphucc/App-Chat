@@ -14,6 +14,8 @@ import {
 } from 'firebase/database';
 import { db } from '../../firebase';
 import { View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
+import { useRoute } from '@react-navigation/native';
+
 const HomeScreen = ({ navigation }) => {
   const [todoData, setTodoData] = useState([]);
   const flatListRef = useRef(null);
@@ -21,6 +23,9 @@ const HomeScreen = ({ navigation }) => {
   const [avt, setAvt] = useState('');
   const [email, setEmail] = useState('');
   const [avtUSer, setavtUSer] = useState('');
+  const [idUser, setIdUser] = useState('');
+  const route = useRoute();
+
   const imageUri = avt || null;
   const imageUser = avtUSer || null;
   const auth = getAuth();
@@ -40,6 +45,7 @@ const HomeScreen = ({ navigation }) => {
               setName(userData[user].name);
               setEmail(userData[user].email);
               setavtUSer(userData[user].avt);
+              setIdUser(userData[user].id);
             } else {
               console.log('khong co du lieu');
             }
@@ -95,14 +101,21 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const goToChatScreen = () => {
-    navigation.navigate('Chat', { username: name });
+    navigation.navigate('ListChats', { idUser: idUser, email: email });
   };
   const goToProfileScreen = () => {
     navigation.navigate('Profile', {
       email: email,
     });
   };
-
+  const goToSearchScreen = () => {
+    navigation.navigate('Search', {
+      idUser: idUser,
+      email: email,
+      avt: avtUSer,
+      name: name,
+    });
+  };
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
@@ -150,12 +163,7 @@ const HomeScreen = ({ navigation }) => {
         <TouchableOpacity style={styles.bowshadow}>
           <MaterialCommunityIcons name='home' size={30} color='white' />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.bowshadow}
-          onPress={() => {
-            navigation.navigate('Search');
-          }}
-        >
+        <TouchableOpacity style={styles.bowshadow} onPress={goToSearchScreen}>
           <MaterialCommunityIcons
             name='account-search'
             size={30}

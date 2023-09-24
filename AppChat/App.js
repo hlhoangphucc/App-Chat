@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './components/login/index';
 import WelcomeScreen from './components/welcome/index';
-import ChatScreen from './components/chat/index';
+import ListChatScreen from './components/chat/index';
 import HomeScreen from './components/home/index';
 import NewpostScreen from './components/home/newpost/newpost';
 import RegisterScreen from './components/register/index';
@@ -14,6 +14,7 @@ import SettingProfile from './components/profile/setting/setting';
 import InfoScreen from './components/profile/setting/info/info';
 import EditiIfoScreen from './components/profile/setting/editinfo/editinfo';
 import SearchScreen from './components/search';
+import ChatScreen from './components/chat/message/index';
 const Stack = createStackNavigator();
 const App = () => {
   return (
@@ -44,6 +45,20 @@ const App = () => {
           name='Newposts'
           component={NewpostScreen}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='ListChats'
+          component={ListChatScreen}
+          options={{
+            headerTitle: 'Danh sách cuộc trò chuyện',
+            headerStyle: {
+              backgroundColor: '#15202b',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
         />
         <Stack.Screen
           name='Chat'

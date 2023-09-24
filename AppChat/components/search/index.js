@@ -1,41 +1,61 @@
 import styles from './style';
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, FlatList, Text,StatusBar,TouchableWithoutFeedback,Keyboard,Image,TouchableOpacity } from 'react-native';
-import { get, ref, query, orderByChild, equalTo, OnDisconnect } from 'firebase/database';
+import {
+  View,
+  TextInput,
+  FlatList,
+  Text,
+  StatusBar,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
+import {
+  get,
+  ref,
+  query,
+  orderByChild,
+  equalTo,
+  update,
+} from 'firebase/database';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { db } from '../../firebase';
-
-function SearchScreen() {
+import { useRoute } from '@react-navigation/native';
+import uuid from 'react-native-uuid';
+function SearchScreen({ navigation }) {
   const [searchText, setSearchText] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const [avt,setAvt] = useState(false);
+  const [avtother, setAvtother] = useState('');
+  const [emailother, setEmailOther] = useState('');
+  const [idOther, setIdOther] = useState('');
+  const [nameOther, setNameOther] = useState('');
+  const route = useRoute();
+  const idUser = route.params.idUser;
+  const email = route.params.email;
+  const name = route.params.name;
+  const avt = route.params.avt;
+
   let count = 0;
-  let [oder,setOder] = useState("");
-  
-  useEffect (()=>{
+  let [oder, setOder] = useState('');
+
+  useEffect(() => {
     count = searchText.length;
-    
-    if(count>10){
-      setOder("email");
-    }else{
-      setOder("phone");
+    // console.log(oder);
+    if (count > 10) {
+      setOder('email');
+    } else {
+      setOder('phone');
     }
   });
-  
-  const handleSearch = (text) => {  
-   
-    setSearchText(text); // Cập nhật nội dung tìm kiếm 
-    // Thực hiện truy vấn Firebase Realtime Database dựa trên nội dung tìm kiếm
-    const dbRef = ref(db, 'users/'); // Đường dẫn đến dữ liệu người dùng
+
+  const handleSearch = (text) => {
+    setSearchText(text);
+    const dbRef = ref(db, 'users/');
     if (text.trim() === '') {
-      setSearchResults([]); // Nếu không có nội dung tìm kiếm, xóa danh sách kết quả
+      setSearchResults([]);
     } else {
-      const userQuery = query(
-        dbRef,
-        orderByChild(oder), // Sắp xếp theo một thuộc tính cụ thể (vd: displayName)
-        equalTo(text) // Tìm các người dùng có displayName trùng với nội dung tìm kiếm
-      );
-      // Lấy kết quả tìm kiếm từ Firebase Realtime Database
+      const userQuery = query(dbRef, orderByChild(oder), equalTo(text));
       get(userQuery)
         .then((snapshot) => {
           if (snapshot.exists()) {
@@ -43,8 +63,12 @@ function SearchScreen() {
             snapshot.forEach((childSnapshot) => {
               const user = childSnapshot.val();
               results.push(user);
+              setEmailOther(user.email);
+              setIdOther(user.id);
+              setAvtother(user.avt);
+              setNameOther(user.name);
             });
-            setAvt(!avt);
+
             setSearchResults(results);
           } else {
             setSearchResults([]);
@@ -55,54 +79,79 @@ function SearchScreen() {
         });
     }
   };
- 
- 
-  return (  
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
-        <View style={styles.container}>
-          
-      <StatusBar barStyle={'dark-content'} />
-      <View style={styles.conten}>
-        <Icon name="search" size={20} style={styles.icon} />
-      <TextInput
-        style={styles.input}
-        placeholder="Tìm kiếm..."
-        autoFocus
-        keyboardType='email-address'
-        onChangeText={(text)=>{handleSearch(text);}}
-        value={searchText}
-      />
-    </View>
-    <View style={styles.bottom}>
-    <FlatList
-        data={searchResults}
-        renderItem={({ item }) => (
-          <TouchableOpacity>
-          <View style={styles.itemuser}>
-            <View style={styles.left}>
-                  <View style={styles.avtuser}>
-                  {avt? 
-                  <Image style = {{width:'100%',height:'100%',borderRadius:50}} 
-                  source={{uri:item.avt}} /> :
-                  <Image style={{width:'100%',height:'100%',borderRadius:50}} source={require('../../assets/icons/user.png')}/>}
+
+  const CreateChatRoom = () => {
+    let data = {
+      emailUser1: email,
+      nameUser1: name,
+      avtUser1: avt,
+      emailUser2: emailother,
+      nameUser2: nameOther,
+      avtUser2: avtother,
+    };
+    const chatlistRef = ref(db, 'chatlists/' + uuid.v4());
+    update(chatlistRef, data)
+      .then(() => console.log('Đã thêm vào danh sach chat'))
+      .catch((error) =>
+        console.error('Lỗi không thêm vào được danh sách chat:', error)
+      );
+  };
+  const goToChatScreen = () => {
+    navigation.navigate('Chat', { email: emailother });
+    CreateChatRoom();
+  };
+  return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <StatusBar barStyle={'dark-content'} />
+        <View style={styles.conten}>
+          <Icon name='search' size={20} style={styles.icon} />
+          <TextInput
+            style={styles.input}
+            placeholder='Tìm kiếm...'
+            autoFocus
+            keyboardType='email-address'
+            onChangeText={(text) => {
+              handleSearch(text);
+            }}
+            value={searchText}
+          />
+        </View>
+        <View style={styles.bottom}>
+          <FlatList
+            data={searchResults}
+            renderItem={({ item }) => (
+              <TouchableOpacity>
+                <View style={styles.itemuser}>
+                  <View style={styles.left}>
+                    <View style={styles.avtuser}>
+                      <Image
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          borderRadius: 50,
+                        }}
+                        source={{ uri: item.avt }}
+                      />
+                    </View>
                   </View>
-              </View>
-              <View style={styles.center}>
-                  <Text style={styles.username}>
-                  {item.name}
-                  </Text>
-              </View>
-              <View style={styles.right}>
-                <TouchableOpacity>
-                   <Image style={styles.iconchat} source={require('../../assets/icons/chat.png')}/>
-                </TouchableOpacity>
-              </View>
-          </View>
-          </TouchableOpacity>
-        )}
-      />
-    </View>
-    </View>
+                  <View style={styles.center}>
+                    <Text style={styles.username}>{item.name}</Text>
+                  </View>
+                  <View style={styles.right}>
+                    <TouchableOpacity onPress={goToChatScreen}>
+                      <Image
+                        style={styles.iconchat}
+                        source={require('../../assets/icons/chat.png')}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+      </View>
     </TouchableWithoutFeedback>
   );
 }
