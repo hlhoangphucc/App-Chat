@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
   iconsContainer: {
     position: 'absolute',
-    top: 5,
+    top: 150,
     right: 10,
     justifyContent: 'flex-end',
   },

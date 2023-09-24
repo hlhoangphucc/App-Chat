@@ -3,11 +3,13 @@ import React, { useState } from 'react';
 import styles from './style';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useRoute } from '@react-navigation/native';
-
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { getAuth, signOut } from 'firebase/auth';
 const SettingProfile = ({ navigation }) => {
   const route = useRoute();
   const name = route.params.username;
   const email = route.params.email;
+  const auth = getAuth();
 
   const goToUpdateAvt = () => {
     navigation.navigate('updateavt');
@@ -30,6 +32,16 @@ const SettingProfile = ({ navigation }) => {
 
   const handleIconClick = () => {
     navigation.goBack();
+  };
+  const handlesignOut = () => {
+    signOut(auth)
+      .then(() => {
+        navigation.navigate('Login');
+        console.log('Đăng xuất thành công');
+      })
+      .catch(() => {
+        console.log('Loi roi cau oi');
+      });
   };
   return (
     <View style={styles.container}>
@@ -96,10 +108,16 @@ const SettingProfile = ({ navigation }) => {
           ]}
           onPressIn={() => handlePress('settings')}
           onPressOut={handlePressOut}
-        >
-          <Text style={styles.textContent}>Cài đặt chung</Text>
-        </TouchableOpacity>
+        ></TouchableOpacity>
         <View style={styles.lineBody}></View>
+      </View>
+      <View style={styles.footer}>
+        <TouchableOpacity onPress={handlesignOut}>
+          <View style={styles.btnsignout}>
+            <Ionicons color={'#fff'} size={40} name='log-out' />
+            <Text style={styles.txtbtn}>Sign out</Text>
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
   );

@@ -41,6 +41,29 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '500',
   },
+  footer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  btnsignout: {
+    height: 70,
+    width: '90%',
+    backgroundColor: '#ED1B24',
+    marginHorizontal: 20,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#fff',
+    marginBottom: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  txtbtn: {
+    fontSize: 25,
+    fontWeight: '600',
+    color: '#fff',
+    marginLeft: 10,
+  },
 });
 
 export default styles;

@@ -14,7 +14,6 @@ import {
 } from 'firebase/database';
 import { db } from '../../firebase';
 import { View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
-import { useRoute } from '@react-navigation/native';
 
 const HomeScreen = ({ navigation }) => {
   const [todoData, setTodoData] = useState([]);
@@ -24,9 +23,6 @@ const HomeScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [avtUSer, setavtUSer] = useState('');
   const [idUser, setIdUser] = useState('');
-  const route = useRoute();
-
-  const imageUri = avt || null;
   const imageUser = avtUSer || null;
   const auth = getAuth();
   let userID = null;
@@ -58,6 +54,7 @@ const HomeScreen = ({ navigation }) => {
 
     return unsubscribe;
   }, [navigation]);
+
   useEffect(() => {
     const startCountRef = ref(db, 'NewPosts/');
     onValue(startCountRef, (snapshot) => {

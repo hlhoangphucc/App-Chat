@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './style';
 import renderItem from './post/posts';
 import { useRoute } from '@react-navigation/native';
+
 import {
   ref,
   query,
@@ -22,9 +23,11 @@ const ProfileScreen = ({ navigation }) => {
   const email = route.params.email;
   const imageUriAvt = avt || null;
   const imageUriBg = bg || null;
+
   const handleIconClick = () => {
     navigation.goBack();
   };
+
   useEffect(() => {
     const startCountRef = ref(db, 'NewPosts/');
     onValue(startCountRef, (snapshot) => {
