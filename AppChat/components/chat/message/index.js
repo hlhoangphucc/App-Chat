@@ -54,20 +54,29 @@ const ChatScreen = ({ navigation }) => {
           userID = user.uid;
           const dbRef = ref(db, 'users/');
           const queryRef = query(dbRef, orderByChild('id'), equalTo(userID));
-          get(queryRef).then((snapshot) => {
-            if (snapshot.exists()) {
-              const userData = snapshot.val();
-              const user = Object.keys(userData)[0];
-              setName(userData[user].name);
-              setEmail(userData[user].email);
-              setAvt(userData[user].avt);
-              setId(userData[user].id);
-            } else {
-              console.log('khong co du lieu');
-            }
-          });
+
+          get(queryRef)
+            .then((snapshot) => {
+              if (snapshot.exists()) {
+                const userData = snapshot.val();
+                const user = Object.keys(userData)[0];
+                setName(userData[user].name);
+                setEmail(userData[user].email);
+                setAvt(userData[user].avt);
+                setId(userData[user].id);
+              } else {
+                console.log('Không tìm thấy người dùng tương ứng với userID.');
+                setName('');
+                setEmail('');
+                setAvt('');
+                setId('');
+              }
+            })
+            .catch((error) => {
+              console.error('Lỗi khi truy cập dữ liệu người dùng:', error);
+            });
         } else {
-          console.log('dang xuat r');
+          console.log('Đăng xuất rồi');
         }
       });
     });
@@ -95,6 +104,9 @@ const ChatScreen = ({ navigation }) => {
           setIdOther(userData[userId].id);
         } else {
           console.log('Không tìm thấy dữ liệu người dùng với email này.');
+          setAvtOther('');
+          setNameOther('');
+          setIdOther('');
         }
       } catch (error) {
         console.error('Lỗi khi lấy dữ liệu người dùng:', error);
@@ -128,7 +140,6 @@ const ChatScreen = ({ navigation }) => {
     if (msg == '') {
       return false;
     }
-
     let data = {
       msg: msg,
       name: name,
@@ -176,17 +187,22 @@ const ChatScreen = ({ navigation }) => {
       });
     }
   };
-
+  const goToChatScreen = () => {
+    navigation.navigate('ListChats');
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.body}>
         <View style={styles.header}>
           <View style={styles.headerLeft}>
-            <Ionicons
-              name='arrow-back-outline'
-              size={30}
-              style={[styles.iconHeader]}
-            />
+            <TouchableOpacity onPress={goToChatScreen}>
+              <Ionicons
+                name='arrow-back-outline'
+                size={30}
+                style={[styles.iconHeader]}
+              />
+            </TouchableOpacity>
+
             <View style={[styles.avtCirle]}>
               <Image source={{ uri: imageUserOther }} style={styles.wrapBody} />
             </View>

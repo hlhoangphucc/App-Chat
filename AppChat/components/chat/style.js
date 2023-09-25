@@ -27,7 +27,24 @@ const styles = StyleSheet.create({
   },
   message: {
     fontSize: 12,
+    fontWeight: '500',
     color: 'white',
+  },
+  modal: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    marginTop: 10,
+  },
+  button: {
+    marginHorizontal: 10,
+    padding: 10,
+    backgroundColor: 'lightblue',
+    borderRadius: 5,
   },
 });
 

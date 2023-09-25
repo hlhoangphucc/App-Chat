@@ -72,7 +72,6 @@ function SearchScreen({ navigation }) {
               setAvtother(user.avt);
               setNameOther(user.name);
             });
-
             setSearchResults(results);
           } else {
             setSearchResults([]);
@@ -88,12 +87,16 @@ function SearchScreen({ navigation }) {
     const startCountRef = ref(db, 'chatlists/');
     onValue(startCountRef, (snapshot) => {
       const data = snapshot.val();
-      const newPosts = Object.keys(data).map((key) => ({
-        id: key,
-        ...data[key],
-      }));
-
-      setchatdata(newPosts);
+      if (data) {
+        const newPosts = Object.keys(data).map((key) => ({
+          id: key,
+          ...data[key],
+        }));
+        setchatdata(newPosts);
+      } else {
+        console.log('Không có dữ liệu chat lists');
+        setchatdata([]);
+      }
     });
   }, []);
 
@@ -103,8 +106,14 @@ function SearchScreen({ navigation }) {
         const chatlistRef = ref(db, 'chatlists/' + item.id);
         onValue(chatlistRef, (snapshot) => {
           const data = snapshot.val();
-          setemailUser1(data.emailUser1);
-          setemailUser2(data.emailUser2);
+          if (data) {
+            setemailUser1(data.emailUser1);
+            setemailUser2(data.emailUser2);
+          } else {
+            console.log('Không có dữ liệu email');
+            setemailUser1('');
+            setemailUser2('');
+          }
         });
       });
     }
@@ -112,8 +121,10 @@ function SearchScreen({ navigation }) {
 
   const CreateChatRoom = () => {
     if (
-      (email !== emailuser1 && email !== emailuser2) ||
-      (emailother !== emailuser1 && emailother !== emailuser2)
+      email !== emailuser1 &&
+      email !== emailuser2 &&
+      emailother !== emailuser1 &&
+      emailother !== emailuser2
     ) {
       data = {
         emailUser1: email,
