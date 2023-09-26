@@ -1,39 +1,56 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
 import styles from './style';
+import { db } from '../../firebase';
+import Modal from 'react-native-modal';
+import { v4 as uuidv4 } from 'uuid';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import {
   ref,
   onValue,
   query,
+  remove,
+  orderByKey,
+  limitToLast,
+  update,
   orderByChild,
   equalTo,
   get,
-  remove,
 } from 'firebase/database';
-import { db } from '../../firebase';
-import Modal from 'react-native-modal';
+
 function ListChatScreen({ navigation }) {
+  const auth = getAuth();
   const [chatdata, setchatdata] = useState([]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [key, setKey] = useState('');
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
-
+  let userID = null;
   useEffect(() => {
-    const Ref = ref(db, 'users/');
-    onValue(Ref, (snapshot) => {
-      const userData = snapshot.val();
-      if (userData) {
-        const userId = Object.keys(userData)[0];
-        setName(userData[userId].name);
-        setEmail(userData[userId].email);
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        userID = user.uid;
+        const dbRef = ref(db, 'users/');
+        const queryRef = query(dbRef, orderByChild('id'), equalTo(userID));
+
+        get(queryRef)
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              const userData = snapshot.val();
+              const user = Object.keys(userData)[0];
+              setName(userData[user].name);
+              setEmail(userData[user].email);
+            } else {
+              console.log('Không tìm thấy người dùng tương ứng với userID.');
+              setName('');
+              setEmail('');
+            }
+          })
+          .catch((error) => {
+            console.error('Lỗi khi truy cập dữ liệu người dùng:', error);
+          });
       } else {
-        console.log('Không có dữ liệu trong cơ sở dữ liệu Firebase.');
-        setName('');
+        console.log('Đăng xuất rồi');
       }
     });
   });
@@ -57,14 +74,42 @@ function ListChatScreen({ navigation }) {
         const filteredChats = newPosts.filter((item) => {
           return email == item.emailUser1 || email == item.emailUser2;
         });
+
         const chatKeys = filteredChats.map((chat) => chat.id);
-        setKey(chatKeys);
-        setchatdata(filteredChats);
+
+        chatKeys.forEach((chatKey) => {
+          const chatRef = ref(db, 'chat/' + chatKey + '/');
+          const queryRef = query(chatRef, orderByKey(), limitToLast(1));
+          onValue(queryRef, (chatSnapshot) => {
+            const chatData = chatSnapshot.val();
+            if (chatData) {
+              const chatDataId = Object.keys(chatData)[0];
+              if (chatData[chatDataId].msg) {
+                const chatWithMsg = {
+                  msg: chatData[chatDataId].msg,
+                };
+                const chatlistRef = ref(db, 'chatlists/' + chatKey);
+                update(chatlistRef, chatWithMsg);
+                // .then(() => console.log('Đã update lastmessage'))
+                // .catch((error) =>
+                //   console.error('Lỗi không update lastmessage', error)
+                // );
+              }
+              setchatdata(filteredChats);
+            } else {
+              console.log('không tìm thấy dữ liệu chat của id : ' + chatKey);
+              setchatdata(filteredChats);
+            }
+          });
+        });
       } else {
         console.log('Không có dữ liệu trong cơ sở dữ liệu Firebase.');
       }
     });
   }, [email]);
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
 
   const handleLongPress = (item) => {
     setSelectedItem(item);
@@ -102,14 +147,16 @@ function ListChatScreen({ navigation }) {
       style={styles.chatItem}
     >
       <Image
-        source={{ uri: name == item.nameUser2 ? item.avtUser1 : item.avtUser2 }}
+        source={{
+          uri: name == item.nameUser2 ? item.avtUser1 : item.avtUser2,
+        }}
         style={styles.avatar}
       />
       <View style={styles.chatInfo}>
         <Text style={styles.name}>
-          {name == item.nameUser2 ? item.nameUser1 : item.nameUser2}
+          {name === item.nameUser2 ? item.nameUser1 : item.nameUser2}
         </Text>
-        <Text style={styles.message}>Tin nhắn</Text>
+        <Text style={styles.message}>{item.msg}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -119,7 +166,7 @@ function ListChatScreen({ navigation }) {
       <FlatList
         data={chatdata}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={() => uuidv4()}
       />
       <Modal isVisible={isModalVisible}>
         <View style={styles.modal}>

@@ -1,5 +1,9 @@
 import styles from './style';
 import React, { useState, useEffect } from 'react';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { db } from '../../firebase';
+import { useRoute } from '@react-navigation/native';
+import uuid from 'react-native-uuid';
 import {
   View,
   TextInput,
@@ -20,22 +24,15 @@ import {
   update,
   onValue,
 } from 'firebase/database';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { db } from '../../firebase';
-import { useRoute } from '@react-navigation/native';
-import uuid from 'react-native-uuid';
+
 function SearchScreen({ navigation }) {
   const [searchText, setSearchText] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [avtother, setAvtother] = useState('');
   const [emailother, setEmailOther] = useState('');
-  const [idOther, setIdOther] = useState('');
   const [nameOther, setNameOther] = useState('');
   const [chatdata, setchatdata] = useState([]);
-  const [emailuser1, setemailUser1] = useState('');
-  const [emailuser2, setemailUser2] = useState('');
   const route = useRoute();
-  const idUser = route.params.idUser;
   const email = route.params.email;
   const name = route.params.name;
   const avt = route.params.avt;
@@ -45,7 +42,6 @@ function SearchScreen({ navigation }) {
 
   useEffect(() => {
     count = searchText.length;
-    // console.log(oder);
     if (count > 10) {
       setOder('email');
     } else {
@@ -68,7 +64,6 @@ function SearchScreen({ navigation }) {
               const user = childSnapshot.val();
               results.push(user);
               setEmailOther(user.email);
-              setIdOther(user.id);
               setAvtother(user.avt);
               setNameOther(user.name);
             });
@@ -100,36 +95,18 @@ function SearchScreen({ navigation }) {
     });
   }, []);
 
-  useEffect(() => {
-    if (chatdata.length > 0) {
-      chatdata.forEach((item) => {
-        const chatlistRef = ref(db, 'chatlists/' + item.id);
-        onValue(chatlistRef, (snapshot) => {
-          const data = snapshot.val();
-          if (data) {
-            setemailUser1(data.emailUser1);
-            setemailUser2(data.emailUser2);
-          } else {
-            console.log('Không có dữ liệu email');
-            setemailUser1('');
-            setemailUser2('');
-          }
-        });
-      });
-    }
-  }, [chatdata]);
-
   const CreateChatRoom = () => {
-    if (
-      email !== emailuser1 &&
-      email !== emailuser2 &&
-      emailother !== emailuser1 &&
-      emailother !== emailuser2
-    ) {
+    const existingChat = chatdata.find(
+      (item) =>
+        (item.emailUser1 === email && item.emailUser2 === emailother) ||
+        (item.emailUser1 === emailother && item.emailUser2 === email)
+    );
+    if (!existingChat) {
       data = {
         emailUser1: email,
         nameUser1: name,
         avtUser1: avt,
+        msg: 'Tin nhắn',
         emailUser2: emailother,
         nameUser2: nameOther,
         avtUser2: avtother,
@@ -141,19 +118,14 @@ function SearchScreen({ navigation }) {
           console.error('Lỗi không thêm vào được danh sách chat:', error)
         );
     } else {
-      chatdata.map((item) => {
-        navigation.navigate('Chat', {
-          roomId: item.id,
-          emailOther: emailother,
-        });
-      });
+      goToChatScreen();
+      alert('Đã có trong danh sách');
       console.log('Đã có trong danh sách');
     }
   };
 
   const goToChatScreen = () => {
     navigation.navigate('ListChats');
-    CreateChatRoom();
   };
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -165,6 +137,7 @@ function SearchScreen({ navigation }) {
             style={styles.input}
             placeholder='Tìm kiếm...'
             autoFocus
+            placeholderTextColor='#b1b5b9'
             keyboardType='email-address'
             onChangeText={(text) => {
               handleSearch(text);
@@ -194,7 +167,7 @@ function SearchScreen({ navigation }) {
                     <Text style={styles.username}>{item.name}</Text>
                   </View>
                   <View style={styles.right}>
-                    <TouchableOpacity onPress={goToChatScreen}>
+                    <TouchableOpacity onPress={CreateChatRoom}>
                       <Image
                         style={styles.iconchat}
                         source={require('../../assets/icons/chat.png')}

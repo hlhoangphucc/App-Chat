@@ -9,7 +9,7 @@ import {
   Animated,
   ScrollView,
   Alert,
-  StatusBar
+  StatusBar,
 } from 'react-native';
 
 const scrollContent = {
@@ -60,7 +60,6 @@ const WelcomeScreen = ({ navigation }) => {
   };
   const goToDetailScreen = () => {
     navigation.navigate('Login');
-    console.log('Da Chuyen Trang');
   };
 
   const Showstorage = () =>
@@ -105,7 +104,6 @@ const WelcomeScreen = ({ navigation }) => {
     }
   };
   return (
-    
     <Animated.View
       style={[styles.container, { backgroundColor: interpolatedColor }]}
     >

@@ -3,6 +3,9 @@ import React, { useState, useEffect } from 'react';
 import styles from './style';
 import renderItem from './post/posts';
 import { useRoute } from '@react-navigation/native';
+import { db } from '../../firebase';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import Modal from 'react-native-modal';
 
 import {
   ref,
@@ -11,15 +14,17 @@ import {
   equalTo,
   get,
   onValue,
+  remove,
 } from 'firebase/database';
-import { db } from '../../firebase';
-import Ionicons from '@expo/vector-icons/Ionicons';
+
 const ProfileScreen = ({ navigation }) => {
+  const route = useRoute();
   const [todoData, setTodoData] = useState([]);
   const [avt, setAvt] = useState('');
   const [bg, setBg] = useState('');
   const [name, setName] = useState('');
-  const route = useRoute();
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
   const email = route.params.email;
   const imageUriAvt = avt || null;
   const imageUriBg = bg || null;
@@ -81,11 +86,41 @@ const ProfileScreen = ({ navigation }) => {
     }
   }, [email]);
 
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
+  const handleLongPress = (item) => {
+    setSelectedItem(item);
+    toggleModal();
+  };
+
+  const handleDeleteItem = (itemId) => {
+    if (selectedItem.id != null) {
+      if (selectedItem && selectedItem.id) {
+        const chatRef = ref(db, 'NewPosts/' + selectedItem.id);
+        try {
+          remove(chatRef).then(() => {
+            console.log('Xóa bài đăng thành công.');
+          });
+        } catch (error) {
+          console.error('Lỗi xóa bài đăng:', error);
+        }
+      }
+    } else {
+      console.log('Không có dữ liêu để xóa');
+    }
+    toggleModal();
+  };
   return (
     <View style={styles.container}>
       <FlatList
         data={todoData.reverse()}
-        renderItem={renderItem}
+        renderItem={({ item }) => (
+          <TouchableOpacity onLongPress={() => handleLongPress(item)}>
+            {renderItem({ item })}
+          </TouchableOpacity>
+        )}
         ListHeaderComponent={
           <View style={styles.headerContainer}>
             <View style={styles.backgroundUser}>
@@ -130,6 +165,19 @@ const ProfileScreen = ({ navigation }) => {
           </View>
         }
       />
+      <Modal isVisible={isModalVisible}>
+        <View style={styles.modal}>
+          <Text>Bạn có muốn xóa bài đăng này không?</Text>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity onPress={handleDeleteItem}>
+              <Text style={styles.button}>Có</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={toggleModal}>
+              <Text style={styles.button}>Không</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };

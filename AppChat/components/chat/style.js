@@ -35,16 +35,22 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   buttonContainer: {
     flexDirection: 'row',
     marginTop: 10,
+    justifyContent: 'center',
   },
   button: {
     marginHorizontal: 10,
     padding: 10,
     backgroundColor: 'lightblue',
     borderRadius: 5,
+    height: 40,
+    width: 100,
+    textAlign: 'center',
+    textAlignVertical: 'center',
   },
 });
 

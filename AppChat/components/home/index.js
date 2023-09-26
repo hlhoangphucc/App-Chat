@@ -16,15 +16,15 @@ import { db } from '../../firebase';
 import { View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
 
 const HomeScreen = ({ navigation }) => {
-  const [todoData, setTodoData] = useState([]);
+  const auth = getAuth();
   const flatListRef = useRef(null);
+  const [todoData, setTodoData] = useState([]);
   const [name, setName] = useState('');
   const [avt, setAvt] = useState('');
   const [email, setEmail] = useState('');
   const [avtUSer, setavtUSer] = useState('');
   const [idUser, setIdUser] = useState('');
   const imageUser = avtUSer || null;
-  const auth = getAuth();
   let userID = null;
   //Tự reload lại trang khi được focus
   useEffect(() => {
@@ -59,11 +59,15 @@ const HomeScreen = ({ navigation }) => {
     const startCountRef = ref(db, 'NewPosts/');
     onValue(startCountRef, (snapshot) => {
       const data = snapshot.val();
-      const newPosts = Object.keys(data).map((key) => ({
-        id: key,
-        ...data[key],
-      }));
-      setTodoData(newPosts);
+      if (data) {
+        const newPosts = Object.keys(data).map((key) => ({
+          id: key,
+          ...data[key],
+        }));
+        setTodoData(newPosts);
+      } else {
+        console.log('Không có dữ liệu bài viết');
+      }
     });
   }, []);
 

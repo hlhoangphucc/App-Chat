@@ -1,3 +1,7 @@
+import React, { useState } from 'react';
+import styles from './style';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import app from '../../firebase';
 import {
   View,
   KeyboardAvoidingView,
@@ -11,11 +15,6 @@ import {
   StatusBar,
   Alert,
 } from 'react-native';
-
-import React, { useState } from 'react';
-import styles from './style';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import app from '../../firebase';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -33,6 +32,7 @@ const LoginScreen = ({ navigation }) => {
       Alert.alert('Incorrect email or password.');
     }
   };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'height' : 'padding'}

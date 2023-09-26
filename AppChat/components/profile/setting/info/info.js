@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { Text, View, Image, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { ref, query, orderByChild, equalTo, get } from 'firebase/database';
-import { db } from '../../../../firebase';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import styles from './style';
 import { useRoute } from '@react-navigation/native';
+import { db } from '../../../../firebase';
 
 const InfoScreen = ({ navigation }) => {
   const [avt, setAvt] = useState('');

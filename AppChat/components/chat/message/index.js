@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './style';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import uuid from 'react-native-uuid';
+import { db } from '../../../firebase';
+import { useRoute } from '@react-navigation/native';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import {
   View,
   Text,
@@ -23,23 +25,16 @@ import {
   equalTo,
   get,
 } from 'firebase/database';
-import { db } from '../../../firebase';
-import { useRoute } from '@react-navigation/native';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const ChatScreen = ({ navigation }) => {
   const auth = getAuth();
   const route = useRoute();
+  const flatListRef = useRef(null);
   const [msg, setMsg] = useState('');
   const [chatData, setChatData] = useState([]);
   const [name, setName] = useState('');
-  const [avt, setAvt] = useState('');
-  const [email, setEmail] = useState('');
   const [nameother, setNameOther] = useState('');
   const [avtother, setAvtOther] = useState('');
-  const flatListRef = useRef(null);
-  const [id, setId] = useState('');
-  const [idother, setIdOther] = useState('');
   const emailOther = route.params.emailOther;
   const idroom = route.params.roomId;
   const ITEM_HEIGHT = 50;
@@ -48,41 +43,31 @@ const ChatScreen = ({ navigation }) => {
   let userID = null;
   // Lấy thông tin của chính mình
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          userID = user.uid;
-          const dbRef = ref(db, 'users/');
-          const queryRef = query(dbRef, orderByChild('id'), equalTo(userID));
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        userID = user.uid;
+        const dbRef = ref(db, 'users/');
+        const queryRef = query(dbRef, orderByChild('id'), equalTo(userID));
 
-          get(queryRef)
-            .then((snapshot) => {
-              if (snapshot.exists()) {
-                const userData = snapshot.val();
-                const user = Object.keys(userData)[0];
-                setName(userData[user].name);
-                setEmail(userData[user].email);
-                setAvt(userData[user].avt);
-                setId(userData[user].id);
-              } else {
-                console.log('Không tìm thấy người dùng tương ứng với userID.');
-                setName('');
-                setEmail('');
-                setAvt('');
-                setId('');
-              }
-            })
-            .catch((error) => {
-              console.error('Lỗi khi truy cập dữ liệu người dùng:', error);
-            });
-        } else {
-          console.log('Đăng xuất rồi');
-        }
-      });
+        get(queryRef)
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              const userData = snapshot.val();
+              const user = Object.keys(userData)[0];
+              setName(userData[user].name);
+            } else {
+              console.log('Không tìm thấy người dùng tương ứng với userID.');
+              setName('');
+            }
+          })
+          .catch((error) => {
+            console.error('Lỗi khi truy cập dữ liệu người dùng:', error);
+          });
+      } else {
+        console.log('Đăng xuất rồi');
+      }
     });
-
-    return unsubscribe;
-  }, [navigation]);
+  });
 
   // Lấy thông tin của user khác
   useEffect(() => {
@@ -101,12 +86,10 @@ const ChatScreen = ({ navigation }) => {
           const userId = Object.keys(userData)[0];
           setAvtOther(userData[userId].avt);
           setNameOther(userData[userId].name);
-          setIdOther(userData[userId].id);
         } else {
           console.log('Không tìm thấy dữ liệu người dùng với email này.');
           setAvtOther('');
           setNameOther('');
-          setIdOther('');
         }
       } catch (error) {
         console.error('Lỗi khi lấy dữ liệu người dùng:', error);
@@ -190,6 +173,7 @@ const ChatScreen = ({ navigation }) => {
   const goToChatScreen = () => {
     navigation.navigate('ListChats');
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.body}>
