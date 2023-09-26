@@ -1,3 +1,9 @@
+import React, { useId, useState } from 'react';
+import styles from './style';
+import { ref, set } from 'firebase/database';
+import app from '../../firebase';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { db } from '../../firebase';
 import {
   View,
   TextInput,
@@ -10,12 +16,6 @@ import {
   Alert,
   KeyboardAvoidingView,
 } from 'react-native';
-import React, { useId, useState } from 'react';
-import styles from './style';
-import { ref, set } from 'firebase/database';
-import app from '../../firebase';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { db } from '../../firebase';
 
 const RegisterScreen = ({ navigation }) => {
   const [username, setUsername] = useState('');

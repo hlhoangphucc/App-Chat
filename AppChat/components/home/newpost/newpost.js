@@ -4,6 +4,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Entypo from '@expo/vector-icons/Entypo';
 import React, { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
+<<<<<<< HEAD
 import {
   Text,
   View,
@@ -12,6 +13,8 @@ import {
   KeyboardAvoidingView,
   SafeAreaView,
 } from 'react-native';
+=======
+>>>>>>> origin/Phuc
 import { ref, set, push } from 'firebase/database';
 import { db } from '../../../firebase';
 import { firebase } from '../../../firebase';
@@ -19,6 +22,19 @@ import { useRoute } from '@react-navigation/native';
 import styles from './style';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+<<<<<<< HEAD
+=======
+import {
+  Text,
+  View,
+  Image,
+  TextInput,
+  KeyboardAvoidingView,
+  SafeAreaView,
+  Alert,
+} from 'react-native';
+
+>>>>>>> origin/Phuc
 const NewpostScreen = () => {
   const route = useRoute();
   const avt = route.params.avt;
@@ -62,7 +78,11 @@ const NewpostScreen = () => {
   };
   const checkStatus = () => {
     if (status == 0) {
+<<<<<<< HEAD
       alert('Vui Lòng Nhập Trạng Thái');
+=======
+      Alert.alert('Thông Báo', 'Vui Lòng Nhập Trạng Thái', [{ text: 'OK' }]);
+>>>>>>> origin/Phuc
     } else {
       createNewpost();
     }
@@ -77,12 +97,20 @@ const NewpostScreen = () => {
     const ref = firebase.storage().ref().child(filename);
     try {
       await ref.put(blob);
+<<<<<<< HEAD
       alert('Đăng bài thành công');
+=======
+      Alert.alert('Thông Báo', 'Đăng bài thành công', [{ text: 'OK' }]);
+>>>>>>> origin/Phuc
       setImage(null);
       return ref;
     } catch (error) {
       console.error('Lỗi khi tải lên hình ảnh:', error);
+<<<<<<< HEAD
       alert('Đăng bài thất bại');
+=======
+      Alert.alert('Thông Báo', 'Đăng bài thất bại', [{ text: 'OK' }]);
+>>>>>>> origin/Phuc
     }
   };
 

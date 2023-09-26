@@ -20,11 +20,15 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {/* <Stack.Screen
+        <Stack.Screen
           name='Welcome'
           component={WelcomeScreen}
           options={{ headerShown: false }}
+<<<<<<< HEAD
         />  */}
+=======
+        />
+>>>>>>> origin/Phuc
         <Stack.Screen
           name='Login'
           component={LoginScreen}
@@ -45,6 +49,26 @@ const App = () => {
           name='Newposts'
           component={NewpostScreen}
           options={{ headerShown: false }}
+          key='home'
+        />
+        <Stack.Screen
+          name='Newposts'
+          component={NewpostScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='ListChats'
+          component={ListChatScreen}
+          options={{
+            headerTitle: 'Danh sách cuộc trò chuyện',
+            headerStyle: {
+              backgroundColor: '#15202b',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
         />
         <Stack.Screen
           name='ListChats'

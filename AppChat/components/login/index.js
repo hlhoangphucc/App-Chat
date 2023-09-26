@@ -1,3 +1,7 @@
+import React, { useState } from 'react';
+import styles from './style';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import app from '../../firebase';
 import {
   View,
   KeyboardAvoidingView,
@@ -12,11 +16,6 @@ import {
   Alert,
 } from 'react-native';
 
-import React, { useState } from 'react';
-import styles from './style';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import app from '../../firebase';
-
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -28,8 +27,6 @@ const LoginScreen = ({ navigation }) => {
       await signInWithEmailAndPassword(auth, email, password);
       console.log('Đăng nhập thành công');
       navigation.navigate('Home');
-      setEmail('');
-      setPassword('');
     } catch (log) {
       console.log('Thất bại: ');
       Alert.alert('Incorrect email or password.');
