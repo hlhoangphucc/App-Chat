@@ -42,10 +42,15 @@ function SearchScreen({ navigation }) {
 
   useEffect(() => {
     count = searchText.length;
-    if (count > 10) {
+    if (count >= 10) {
       setOder('email');
     } else {
       setOder('phone');
+    }
+  });
+  useEffect(()=>{
+    if(email == emailother){
+      setSearchResults(null);
     }
   });
 
@@ -58,6 +63,7 @@ function SearchScreen({ navigation }) {
       const userQuery = query(dbRef, orderByChild(oder), equalTo(text));
       get(userQuery)
         .then((snapshot) => {
+          
           if (snapshot.exists()) {
             const results = [];
             snapshot.forEach((childSnapshot) => {
@@ -130,7 +136,7 @@ function SearchScreen({ navigation }) {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        <StatusBar barStyle={'dark-content'} />
+        <StatusBar barStyle={'auto'} />
         <View style={styles.conten}>
           <Icon name='search' size={20} style={styles.icon} />
           <TextInput

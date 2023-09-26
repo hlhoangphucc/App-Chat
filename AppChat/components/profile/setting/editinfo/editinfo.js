@@ -1,12 +1,9 @@
 import { Text, View, TextInput, Image, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
-<<<<<<< HEAD
-=======
 import { db } from '../../../../firebase';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import styles from './style';
 import { useRoute } from '@react-navigation/native';
->>>>>>> origin/Phuc
 import {
   ref,
   query,
@@ -16,13 +13,6 @@ import {
   update,
   onValue,
 } from 'firebase/database';
-<<<<<<< HEAD
-import { db } from '../../../../firebase';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import styles from './style';
-import { useRoute } from '@react-navigation/native';
-=======
->>>>>>> origin/Phuc
 
 const EditiIfoScreen = ({ navigation }) => {
   const [avt, setAvt] = useState('');

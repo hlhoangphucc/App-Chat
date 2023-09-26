@@ -13,27 +13,18 @@ import {
   get,
 } from 'firebase/database';
 import { db } from '../../firebase';
-import { View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, Image, TouchableOpacity, FlatList, StatusBar } from 'react-native';
 
 const HomeScreen = ({ navigation }) => {
-<<<<<<< HEAD
-  const [todoData, setTodoData] = useState([]);
-  const flatListRef = useRef(null);
-=======
   const auth = getAuth();
   const flatListRef = useRef(null);
   const [todoData, setTodoData] = useState([]);
->>>>>>> origin/Phuc
   const [name, setName] = useState('');
   const [avt, setAvt] = useState('');
   const [email, setEmail] = useState('');
   const [avtUSer, setavtUSer] = useState('');
   const [idUser, setIdUser] = useState('');
   const imageUser = avtUSer || null;
-<<<<<<< HEAD
-  const auth = getAuth();
-=======
->>>>>>> origin/Phuc
   let userID = null;
   //Tự reload lại trang khi được focus
   useEffect(() => {
@@ -56,11 +47,7 @@ const HomeScreen = ({ navigation }) => {
             }
           });
         } else {
-<<<<<<< HEAD
-          // console.log('dang xuat r');
-=======
           console.log('dang xuat r');
->>>>>>> origin/Phuc
         }
       });
     });
@@ -72,38 +59,6 @@ const HomeScreen = ({ navigation }) => {
     const startCountRef = ref(db, 'NewPosts/');
     onValue(startCountRef, (snapshot) => {
       const data = snapshot.val();
-<<<<<<< HEAD
-      const newPosts = Object.keys(data).map((key) => ({
-        id: key,
-        ...data[key],
-      }));
-      setTodoData(newPosts);
-    });
-  }, []);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const usersRef = ref(db, 'users/');
-        const queryRef = query(usersRef, orderByChild('email'), equalTo(email));
-        const snapshot = await get(queryRef);
-        if (snapshot.exists()) {
-          const userData = snapshot.val();
-          const userId = Object.keys(userData)[0];
-          setAvt(userData[userId].avt);
-        } else {
-          console.log('Không tìm thấy dữ liệu người dùng với email này.');
-        }
-      } catch (error) {
-        console.error('Lỗi khi lấy dữ liệu người dùng:', error);
-      }
-    };
-    if (email) {
-      fetchUserData();
-    }
-  }, [email]);
-
-=======
       if (data) {
         const newPosts = Object.keys(data).map((key) => ({
           id: key,
@@ -138,7 +93,6 @@ const HomeScreen = ({ navigation }) => {
     }
   }, [email]);
 
->>>>>>> origin/Phuc
   const goToNewPostScreen = () => {
     navigation.navigate('Newposts', {
       name: name,
@@ -165,6 +119,7 @@ const HomeScreen = ({ navigation }) => {
   };
   return (
     <View style={styles.container}>
+      <StatusBar barStyle={'auto'} />
       <View style={styles.headerContainer}>
         <View style={styles.headerLeft}>
           <Text style={styles.headerText}>freebook</Text>

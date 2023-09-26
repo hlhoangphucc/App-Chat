@@ -27,10 +27,6 @@ const styles = StyleSheet.create({
   },
   message: {
     fontSize: 12,
-<<<<<<< HEAD
-    color: 'white',
-  },
-=======
     fontWeight: '500',
     color: 'white',
   },
@@ -56,7 +52,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
   },
->>>>>>> origin/Phuc
 });
 
 export default styles;

@@ -2,16 +2,6 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import React, { useEffect, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
-<<<<<<< HEAD
-import {
-  Text,
-  View,
-  Image,
-  TextInput,
-  KeyboardAvoidingView,
-  SafeAreaView,
-} from 'react-native';
-=======
 import { db } from '../../../firebase';
 import { firebase } from '../../../firebase';
 import styles from './style';
@@ -19,7 +9,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { Text, View, Image, Alert, SafeAreaView } from 'react-native';
->>>>>>> origin/Phuc
 import {
   ref,
   query,
@@ -28,16 +17,6 @@ import {
   get,
   update,
 } from 'firebase/database';
-<<<<<<< HEAD
-import { db } from '../../../firebase';
-import { firebase } from '../../../firebase';
-import styles from './style';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-=======
-
->>>>>>> origin/Phuc
 const UpdateAvt = () => {
   const [image, setImage] = useState(null);
   const imageUri = image || '';
@@ -98,11 +77,7 @@ const UpdateAvt = () => {
         console.log('Đổi avt thành công');
         goToHomeScreen();
       } else {
-<<<<<<< HEAD
-        alert('Vui lòng chọn ảnh ');
-=======
         Alert.alert('Thông Báo', 'Vui lòng chọn ảnh', [{ text: 'OK' }]);
->>>>>>> origin/Phuc
       }
     } catch (error) {
       console.error('Lỗi khi thay đổi avt:', error);
@@ -118,25 +93,17 @@ const UpdateAvt = () => {
     const ref = firebase.storage().ref().child(filename);
     try {
       await ref.put(blob);
-<<<<<<< HEAD
-      alert('Thay đổi hình đại diện thành công');
-=======
       Alert.alert('Thông Báo', 'Thay đổi hình đại diện thành công', [
         { text: 'OK' },
       ]);
 
->>>>>>> origin/Phuc
       setImage(null);
       return ref;
     } catch (error) {
       console.error('Thay đổi hình đại diện thất bại:', error);
-<<<<<<< HEAD
-      alert('Thay đổi hình đại diện thành công thất bại');
-=======
       Alert.alert('Thông Báo', 'Thay đổi hình đại diện thành công thất bại', [
         { text: 'OK' },
       ]);
->>>>>>> origin/Phuc
     }
   };
 

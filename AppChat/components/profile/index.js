@@ -3,12 +3,9 @@ import React, { useState, useEffect } from 'react';
 import styles from './style';
 import renderItem from './post/posts';
 import { useRoute } from '@react-navigation/native';
-<<<<<<< HEAD
-=======
 import { db } from '../../firebase';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Modal from 'react-native-modal';
->>>>>>> origin/Phuc
 
 import {
   ref,
@@ -17,28 +14,17 @@ import {
   equalTo,
   get,
   onValue,
-<<<<<<< HEAD
-} from 'firebase/database';
-import { db } from '../../firebase';
-import Ionicons from '@expo/vector-icons/Ionicons';
-const ProfileScreen = ({ navigation }) => {
-=======
   remove,
 } from 'firebase/database';
 
 const ProfileScreen = ({ navigation }) => {
   const route = useRoute();
->>>>>>> origin/Phuc
   const [todoData, setTodoData] = useState([]);
   const [avt, setAvt] = useState('');
   const [bg, setBg] = useState('');
   const [name, setName] = useState('');
-<<<<<<< HEAD
-  const route = useRoute();
-=======
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
->>>>>>> origin/Phuc
   const email = route.params.email;
   const imageUriAvt = avt || null;
   const imageUriBg = bg || null;
@@ -100,8 +86,6 @@ const ProfileScreen = ({ navigation }) => {
     }
   }, [email]);
 
-<<<<<<< HEAD
-=======
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
@@ -128,20 +112,15 @@ const ProfileScreen = ({ navigation }) => {
     }
     toggleModal();
   };
->>>>>>> origin/Phuc
   return (
     <View style={styles.container}>
       <FlatList
         data={todoData.reverse()}
-<<<<<<< HEAD
-        renderItem={renderItem}
-=======
         renderItem={({ item }) => (
           <TouchableOpacity onLongPress={() => handleLongPress(item)}>
             {renderItem({ item })}
           </TouchableOpacity>
         )}
->>>>>>> origin/Phuc
         ListHeaderComponent={
           <View style={styles.headerContainer}>
             <View style={styles.backgroundUser}>
@@ -186,8 +165,6 @@ const ProfileScreen = ({ navigation }) => {
           </View>
         }
       />
-<<<<<<< HEAD
-=======
       <Modal isVisible={isModalVisible}>
         <View style={styles.modal}>
           <Text>Bạn có muốn xóa bài đăng này không?</Text>
@@ -201,7 +178,6 @@ const ProfileScreen = ({ navigation }) => {
           </View>
         </View>
       </Modal>
->>>>>>> origin/Phuc
     </View>
   );
 };

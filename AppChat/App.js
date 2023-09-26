@@ -24,11 +24,7 @@ const App = () => {
           name='Welcome'
           component={WelcomeScreen}
           options={{ headerShown: false }}
-<<<<<<< HEAD
-        />  */}
-=======
         />
->>>>>>> origin/Phuc
         <Stack.Screen
           name='Login'
           component={LoginScreen}
@@ -42,7 +38,7 @@ const App = () => {
         <Stack.Screen
           name='Home'
           component={HomeScreen}
-          options={{ headerShown: false,gestureEnabled:false }}
+          options={{ headerShown: false, gestureEnabled:false }}
           key='home'
         />
         <Stack.Screen
@@ -50,25 +46,6 @@ const App = () => {
           component={NewpostScreen}
           options={{ headerShown: false }}
           key='home'
-        />
-        <Stack.Screen
-          name='Newposts'
-          component={NewpostScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name='ListChats'
-          component={ListChatScreen}
-          options={{
-            headerTitle: 'Danh sách cuộc trò chuyện',
-            headerStyle: {
-              backgroundColor: '#15202b',
-            },
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-              fontWeight: 'bold',
-            },
-          }}
         />
         <Stack.Screen
           name='ListChats'

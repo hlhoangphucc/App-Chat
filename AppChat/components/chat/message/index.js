@@ -4,6 +4,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { db } from '../../../firebase';
 import { useRoute } from '@react-navigation/native';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+
 import {
   View,
   Text,

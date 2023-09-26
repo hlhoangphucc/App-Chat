@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { View, Text, StyleSheet, Image } from 'react-native';
-=======
 import { View, Text, Image } from 'react-native';
->>>>>>> origin/Phuc
 import React from 'react';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import styles from './style';

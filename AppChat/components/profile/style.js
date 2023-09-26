@@ -65,8 +65,6 @@ const styles = StyleSheet.create({
     left: 10,
     justifyContent: 'flex-end',
   },
-<<<<<<< HEAD
-=======
   modal: {
     backgroundColor: 'white',
     padding: 20,
@@ -89,6 +87,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
   },
->>>>>>> origin/Phuc
 });
 export default styles;
