@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
   iconsContainer: {
     position: 'absolute',
-    top: 5,
+    top: 150,
     right: 10,
     justifyContent: 'flex-end',
   },
@@ -65,31 +65,5 @@ const styles = StyleSheet.create({
     left: 10,
     justifyContent: 'flex-end',
   },
-  header:{
-    flex:1,
-  },
-  footer:{
-    flex:1,
-    justifyContent:'flex-end'
-  },
-  btnsignout:{
-    height:70,
-    width:'90%',
-    backgroundColor:'#ED1B24',
-    marginHorizontal:20,
-    borderRadius:20,
-    borderWidth:1,
-    borderColor:'#fff',
-    marginBottom:80,
-    justifyContent:'center',
-    alignItems:'center',
-    flexDirection:'row'
-  },
-  txtbtn:{
-    fontSize:25,
-    fontWeight:'600',
-    color:'#fff',
-    marginLeft:10
-  }
 });
 export default styles;

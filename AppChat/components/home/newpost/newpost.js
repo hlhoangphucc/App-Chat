@@ -11,7 +11,6 @@ import {
   TextInput,
   KeyboardAvoidingView,
   SafeAreaView,
-  StatusBar
 } from 'react-native';
 import { ref, set, push } from 'firebase/database';
 import { db } from '../../../firebase';
@@ -119,7 +118,6 @@ const NewpostScreen = () => {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <StatusBar barStyle={'auto'}/>
       <SafeAreaView style={styles.container}>
         <View style={styles.headerContainer}>
           <View style={styles.headerLeft}>

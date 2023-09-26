@@ -28,6 +28,8 @@ const LoginScreen = ({ navigation }) => {
       await signInWithEmailAndPassword(auth, email, password);
       console.log('Đăng nhập thành công');
       navigation.navigate('Home');
+      setEmail('');
+      setPassword('');
     } catch (log) {
       console.log('Thất bại: ');
       Alert.alert('Incorrect email or password.');

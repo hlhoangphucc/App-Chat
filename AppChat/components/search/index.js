@@ -18,6 +18,7 @@ import {
   orderByChild,
   equalTo,
   update,
+  onValue,
 } from 'firebase/database';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { db } from '../../firebase';
@@ -30,6 +31,9 @@ function SearchScreen({ navigation }) {
   const [emailother, setEmailOther] = useState('');
   const [idOther, setIdOther] = useState('');
   const [nameOther, setNameOther] = useState('');
+  const [chatdata, setchatdata] = useState([]);
+  const [emailuser1, setemailUser1] = useState('');
+  const [emailuser2, setemailUser2] = useState('');
   const route = useRoute();
   const idUser = route.params.idUser;
   const email = route.params.email;
@@ -68,8 +72,11 @@ function SearchScreen({ navigation }) {
               setAvtother(user.avt);
               setNameOther(user.name);
             });
-
-            setSearchResults(results);
+            if(email == emailother){
+              setSearchResults(null);
+            }else{
+                setSearchResults(results);
+            };
           } else {
             setSearchResults([]);
           }
@@ -80,24 +87,64 @@ function SearchScreen({ navigation }) {
     }
   };
 
+  useEffect(() => {
+    const startCountRef = ref(db, 'chatlists/');
+    onValue(startCountRef, (snapshot) => {
+      const data = snapshot.val();
+      const newPosts = Object.keys(data).map((key) => ({
+        id: key,
+        ...data[key],
+      }));
+
+      setchatdata(newPosts);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (chatdata.length > 0) {
+      chatdata.forEach((item) => {
+        const chatlistRef = ref(db, 'chatlists/' + item.id);
+        onValue(chatlistRef, (snapshot) => {
+          const data = snapshot.val();
+          setemailUser1(data.emailUser1);
+          setemailUser2(data.emailUser2);
+        });
+      });
+    }
+  }, [chatdata]);
+
   const CreateChatRoom = () => {
-    let data = {
-      emailUser1: email,
-      nameUser1: name,
-      avtUser1: avt,
-      emailUser2: emailother,
-      nameUser2: nameOther,
-      avtUser2: avtother,
-    };
-    const chatlistRef = ref(db, 'chatlists/' + uuid.v4());
-    update(chatlistRef, data)
-      .then(() => console.log('Đã thêm vào danh sach chat'))
-      .catch((error) =>
-        console.error('Lỗi không thêm vào được danh sách chat:', error)
-      );
+    if (
+      (email !== emailuser1 && email !== emailuser2) ||
+      (emailother !== emailuser1 && emailother !== emailuser2)
+    ) {
+      data = {
+        emailUser1: email,
+        nameUser1: name,
+        avtUser1: avt,
+        emailUser2: emailother,
+        nameUser2: nameOther,
+        avtUser2: avtother,
+      };
+      const chatlistRef = ref(db, 'chatlists/' + uuid.v4());
+      update(chatlistRef, data)
+        .then(() => console.log('Đã thêm vào danh sách chat'))
+        .catch((error) =>
+          console.error('Lỗi không thêm vào được danh sách chat:', error)
+        );
+    } else {
+      chatdata.map((item) => {
+        navigation.navigate('Chat', {
+          roomId: item.id,
+          emailOther: emailother,
+        });
+      });
+      console.log('Đã có trong danh sách');
+    }
   };
+
   const goToChatScreen = () => {
-    navigation.navigate('Chat', { email: emailother });
+    navigation.navigate('ListChats');
     CreateChatRoom();
   };
   return (

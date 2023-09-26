@@ -40,12 +40,11 @@ const ChatScreen = ({ navigation }) => {
   const flatListRef = useRef(null);
   const [id, setId] = useState('');
   const [idother, setIdOther] = useState('');
-  const [othername, setOthername] = useState('');
-  const emailOther = route.params.email;
+  const emailOther = route.params.emailOther;
   const idroom = route.params.roomId;
-  console.log(idroom);
   const ITEM_HEIGHT = 50;
   const imageUserOther = avtother || null;
+
   let userID = null;
   // Lấy thông tin của chính mình
   useEffect(() => {
@@ -106,10 +105,9 @@ const ChatScreen = ({ navigation }) => {
       fetchUserData();
     }
   }, [emailOther]);
-  const key = id + idother;
 
   useEffect(() => {
-    const chatPath = 'chat/' + key;
+    const chatPath = 'chat/' + idroom;
     const chatRef = ref(db, chatPath);
 
     onValue(chatRef, (snapshot) => {
@@ -126,19 +124,16 @@ const ChatScreen = ({ navigation }) => {
     });
   }, []);
 
-  // console.log(chatData);
-
   const sendChat = () => {
     if (msg == '') {
       return false;
     }
-    let roomid = uuid.v4();
+
     let data = {
-      roomid,
       msg: msg,
       name: name,
     };
-    const newChatRef = push(ref(db, 'chat/' + id + idother + '/'));
+    const newChatRef = push(ref(db, 'chat/' + idroom));
     set(newChatRef, data)
       .then(() => {
         console.log('Chat thành công ');
@@ -181,6 +176,7 @@ const ChatScreen = ({ navigation }) => {
       });
     }
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.body}>

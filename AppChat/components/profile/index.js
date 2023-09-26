@@ -1,8 +1,9 @@
-import { Text, View, Image, FlatList, TouchableOpacity, Alert } from 'react-native';
+import { Text, View, Image, FlatList, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import styles from './style';
 import renderItem from './post/posts';
 import { useRoute } from '@react-navigation/native';
+
 import {
   ref,
   query,
@@ -13,9 +14,6 @@ import {
 } from 'firebase/database';
 import { db } from '../../firebase';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { getAuth, signOut } from 'firebase/auth';
-import app from '../../firebase';
-
 const ProfileScreen = ({ navigation }) => {
   const [todoData, setTodoData] = useState([]);
   const [avt, setAvt] = useState('');
@@ -25,23 +23,11 @@ const ProfileScreen = ({ navigation }) => {
   const email = route.params.email;
   const imageUriAvt = avt || null;
   const imageUriBg = bg || null;
-  const auth = getAuth(app);
-
-  const handlesignOut =()=>{
-    signOut(auth)
-    .then(()=>{
-      navigation.navigate('Login')
-      console.log('Đăng xuất thành công');
-    })
-    .catch(()=>{
-      console.log('Loi roi cau oi');
-    });
-  };
-
 
   const handleIconClick = () => {
     navigation.goBack();
   };
+
   useEffect(() => {
     const startCountRef = ref(db, 'NewPosts/');
     onValue(startCountRef, (snapshot) => {
@@ -97,7 +83,6 @@ const ProfileScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
       <FlatList
         data={todoData.reverse()}
         renderItem={renderItem}
@@ -145,15 +130,6 @@ const ProfileScreen = ({ navigation }) => {
           </View>
         }
       />
-      </View>
-      <View  style={styles.footer}>
-        <TouchableOpacity onPress={handlesignOut}>
-                  <View style={styles.btnsignout}>
-          <Ionicons color={'#fff'} size={40} name='log-out' />
-          <Text style={styles.txtbtn}>Sign out</Text>
-        </View>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 };
