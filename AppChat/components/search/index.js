@@ -42,10 +42,16 @@ function SearchScreen({ navigation }) {
 
   useEffect(() => {
     count = searchText.length;
-    if (count > 10) {
+    if (count >= 10) {
       setOder('email');
     } else {
       setOder('phone');
+    }
+  });
+
+  useEffect(() => {
+    if (email == emailother) {
+      setSearchResults(null);
     }
   });
 
@@ -69,7 +75,7 @@ function SearchScreen({ navigation }) {
             });
             setSearchResults(results);
           } else {
-            setSearchResults([]);
+            setSearchResults(null);
           }
         })
         .catch((error) => {
