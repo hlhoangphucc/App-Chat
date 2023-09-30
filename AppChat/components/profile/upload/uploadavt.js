@@ -17,6 +17,7 @@ import {
   get,
   update,
 } from 'firebase/database';
+
 const UpdateAvt = () => {
   const [image, setImage] = useState(null);
   const imageUri = image || '';

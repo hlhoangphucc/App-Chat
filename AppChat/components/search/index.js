@@ -48,8 +48,9 @@ function SearchScreen({ navigation }) {
       setOder('phone');
     }
   });
-  useEffect(()=>{
-    if(email == emailother){
+
+  useEffect(() => {
+    if (email == emailother) {
       setSearchResults(null);
     }
   });
@@ -63,7 +64,6 @@ function SearchScreen({ navigation }) {
       const userQuery = query(dbRef, orderByChild(oder), equalTo(text));
       get(userQuery)
         .then((snapshot) => {
-          
           if (snapshot.exists()) {
             const results = [];
             snapshot.forEach((childSnapshot) => {
@@ -75,7 +75,7 @@ function SearchScreen({ navigation }) {
             });
             setSearchResults(results);
           } else {
-            setSearchResults([]);
+            setSearchResults(null);
           }
         })
         .catch((error) => {
@@ -136,7 +136,7 @@ function SearchScreen({ navigation }) {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        <StatusBar barStyle={'auto'} />
+        <StatusBar barStyle={'dark-content'} />
         <View style={styles.conten}>
           <Icon name='search' size={20} style={styles.icon} />
           <TextInput

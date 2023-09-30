@@ -13,7 +13,14 @@ import {
   get,
 } from 'firebase/database';
 import { db } from '../../firebase';
-import { View, Text, Image, TouchableOpacity, FlatList, StatusBar } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  FlatList,
+  StatusBar,
+} from 'react-native';
 
 const HomeScreen = ({ navigation }) => {
   const auth = getAuth();
@@ -119,7 +126,7 @@ const HomeScreen = ({ navigation }) => {
   };
   return (
     <View style={styles.container}>
-      <StatusBar barStyle={'auto'} />
+      <StatusBar animated={true} backgroundColor='#61dafb' barStyle={'auto'} />
       <View style={styles.headerContainer}>
         <View style={styles.headerLeft}>
           <Text style={styles.headerText}>freebook</Text>

@@ -98,18 +98,6 @@ const SettingProfile = ({ navigation }) => {
           <Text style={styles.textContent}>Đổi hình nền</Text>
         </TouchableOpacity>
         <View style={styles.lineBody}></View>
-        <TouchableOpacity
-          style={[
-            styles.contentBody,
-            {
-              backgroundColor:
-                pressedButton === 'settings' ? '#f0f0f0' : 'transparent',
-            },
-          ]}
-          onPressIn={() => handlePress('settings')}
-          onPressOut={handlePressOut}
-        ></TouchableOpacity>
-        <View style={styles.lineBody}></View>
       </View>
       <View style={styles.footer}>
         <TouchableOpacity onPress={handlesignOut}>

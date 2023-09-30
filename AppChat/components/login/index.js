@@ -32,6 +32,7 @@ const LoginScreen = ({ navigation }) => {
       Alert.alert('Incorrect email or password.');
     }
   };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'height' : 'padding'}
